@@ -44,11 +44,13 @@ class AvisoWpp
 
         foreach ($this->reservas as $reserva) {
 
+            $this->mensaje = str_replace("\n", "\\n", $this->mensaje);
+
             $name = $reserva->usuario ;
             $cel = "549" . $reserva->telefono;
-            $mens= "*Hola $name!* \n Tenemos un *AVISO IMPORTANTE* acerca de tu reserva para el Planetario Móvil - Función: $reserva->titulo -" . 
+            $mens= "*Hola $name!* \\nTenemos un *AVISO IMPORTANTE* acerca de tu reserva para el Planetario Móvil - Función: $reserva->titulo -" . 
                     utf8_encode(strftime('%A %d de %B', strtotime($reserva->fecha))) . 
-                    " - " . strftime('%H:%M', strtotime($reserva->horario )) . "\n" . $this->mensaje;
+                    " - " . strftime('%H:%M', strtotime($reserva->horario )) . "\\n" . $this->mensaje;
 
             
 

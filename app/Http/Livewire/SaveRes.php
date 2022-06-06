@@ -46,11 +46,8 @@ class SaveRes extends Component
         }
 
         $mensaje = 'Tu reserva ya está registrada.<br> Código de reserva: <b>' . str_pad($reserva->id, 4 ,"0", STR_PAD_LEFT) . 
-        '</b><br>Te recomendamos que hagas una captura de pantalla para tener a mano esta info<br>
-        <br><b>¿Cómo y cuándo se retiran las entradas?</b><br>Tenés que estar 30 min antes para asegurar tu lugar y abonar la entrada en el lugar del evento. Si no llegás las entradas pasan a disponibilidad
-        <br><b>Medios de pago? | Solo en efectivo</b><br><br>Por favor sino vas al evento, avísanos por mensaje privado de Facebook o mensaje directo de Instagram, así la reserva se la damos a otra persona que si quiera ir! La reserva de entradas es un compromiso de asistencia  al evento. Pedimos por favor, que no nos fallen. Gracias!
-        <br><br><b>PARA COMUNICARTE CON NOSOTROS:</b><br>FACEBOOK: MENSAJE PRIVADO EN: ESTRELLA DEL PLATA (PLANETARIO MOVIL).<br>INSTAGRAM: MENSAJE DIRECTO EN: @ESTRELLADELPLATA<br><b>Te esperamos!</b>'; 
-
+        '</b><br>Recibirás todos los detalles por WhatsApp. <br> <b>Te esperamos!</b>'; 
+        
         $resSheet = new SaveResSheet($reserva, $evt, $selectedFunc1, $selectedFunc2);
         
         //$resSheet->save();
