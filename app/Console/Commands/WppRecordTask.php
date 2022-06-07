@@ -74,8 +74,8 @@ class WppRecordTask extends Command
             $cel = "549". $reserva->telefono;
         
             $mens = "👋 *Hola $reserva->usuario*. Hoy está el *Planetario Móvil* en ";
-            $mens .= "*$reserva->lugar!!* ($reserva->direccion). Te reenviamos los datos de tu reserva para que los tengas a mano: \\\n";
-            $mens .= "➖➖➖➖➖➖➖\\\n"; 
+            $mens .= "*$reserva->lugar!!* ($reserva->direccion). Te reenviamos los datos de tu reserva para que los tengas a mano: \\n";
+            $mens .= "➖➖➖➖➖➖➖\\n"; 
             $mens .= "🔑 CODIGO DE RESERVA: *$reserva->codigo_res*\\n";
             $mens .= "🎫 Cantidad de Entradas: *$reserva->cant_adul*\\n";
             $mens .= "🎫 Seguro (niños entre 1 y 2 años ó CUD): *$reserva->cant_esp*\\n";
@@ -110,7 +110,7 @@ class WppRecordTask extends Command
                 CURLOPT_TIMEOUT => 30,
                 CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                 CURLOPT_CUSTOMREQUEST => "POST",
-                CURLOPT_POSTFIELDS => "{\"phone\":\"". $this->cel. "\",\"message\":\"" . $this->mens . "\"}",
+                CURLOPT_POSTFIELDS => "{\"phone\":\"". $cel. "\",\"message\":\"" . $mens . "\"}",
                 CURLOPT_HTTPHEADER => [
                     "Content-Type: application/json",
                     "Token: 066f35090cd6e1403c8c62cb8fdfbb2cec1afa37f8522d85200245997ad75130f889c44eeb732f4a"
@@ -122,6 +122,9 @@ class WppRecordTask extends Command
         
             curl_close($curl);
 
+            $fw = fopen(storage_path('logs/respconf.log'), 'a');
+            fwrite($fw , $response . PHP_EOL);
+            fclose($fw);
 
             if ($err){
                 continue;
