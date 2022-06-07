@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EventoController;
 use App\Http\Livewire\ShowEventos;
 use App\Http\Controllers\Admin\GeneraleController;
+use App\Http\Controllers\WebHookController;
 
 
 /*
@@ -38,9 +39,12 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/admin/eventoprint/{id_eve
 
 Route::get('users/report', 'UsersController@report');
 
+Route::post('/webhook', [WebHookController::class, 'handle']);
 
 Route::get('/', ShowEventos::class)->name('home');
 
 Route::get('/{id_event}', [EventoController::class, 'show'])->name('evento.show');
+
+
 
 
