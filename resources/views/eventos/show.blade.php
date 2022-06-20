@@ -130,7 +130,7 @@
         </div>
 @endif
 
-        @livewire('save-res');
+        @livewire('save-res')
     </div>
 
 </x-app-layout>
