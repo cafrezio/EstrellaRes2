@@ -10,12 +10,14 @@ class WebHookController extends Controller
   {     
     $cel = $request->data['fromNumber'];
         
-    $mens = "🤖 Hola!  Solo soy un bot que envía información. No puedo responder consultas. \\n";
+    $mens = "👋 Hola!  \\n\\n";
+    $mens.= "comunicarte por:\\n\\n";
+    $mens.= "*Facebook* \\n";
+    $mens.= "👉  https://m.me/EstrellaDelPlataPlanetarioMovil\\n\\n";
+    $mens.= "*Instagram* \\n";
+    $mens.= "👉  https://www.instagram.com/estrelladelplata\\n";
     $mens.= "➖➖➖➖➖➖➖\\n";
-    $mens.= "🤔 Si tenés alguna duda podés comunicarte por:\\n";
-    $mens.= "*Facebook*   👉  https://m.me/EstrellaDelPlataPlanetarioMovil\\n";
-    $mens.= "*Instagram*  👉  https://www.instagram.com/estrelladelplata\\n";
-    $mens.= "➖➖➖➖➖➖➖";
+    $mens.= "Gracias";
 
     $curl = curl_init();
 
