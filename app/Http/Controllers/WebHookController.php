@@ -10,7 +10,7 @@ class WebHookController extends Controller
   {     
     $cel = $request->data['fromNumber'];
         
-    $mens = "👋 Hola!  \\n\\n";
+    $mens = "Hola!  \\n\\n";
     $mens.= "comunicarte por:\\n\\n";
     $mens.= "*Facebook* \\n";
     $mens.= "👉  https://m.me/EstrellaDelPlataPlanetarioMovil\\n\\n";

@@ -51,8 +51,10 @@
                 </div>
             </div>
             <br>
-            <p style="color: #2312b6; margin-bottom:0px;">Si sacás entradas para dos funciones <b>tenés  descuento!</b>
+            @if ($evento->precio != $evento->precio_prom)
+                <p style="color: #2312b6; margin-bottom:0px;">Si sacás entradas para dos funciones <b>tenés  descuento!</b>
                 Pagás el <b>precio promocional de ${{ $evento->precio_prom }} </b>cada entrada!</p>
+            @endif
             <div class="row">
                 <div class="col">
                     <b><label for="funcion2">Selecciona la segunda función (opcional)</label></b>
