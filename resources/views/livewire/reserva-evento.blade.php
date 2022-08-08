@@ -51,13 +51,23 @@
                 </div>
             </div>
             <br>
-            @if ($evento->precio != $evento->precio_prom)
-                <p style="color: #2312b6; margin-bottom:0px;">Si sacás entradas para dos funciones <b>tenés  descuento!</b>
-                Pagás el <b>precio promocional de ${{ $evento->precio_prom }} </b>cada entrada!</p>
-            @endif
+          
+          <p style="color: #2312b6; margin-bottom:0px;">
+            <b>Si querés sacar entradas para dos funciones seleccioná la segunda función abajo.</b></p>
+           <p style="color: #2312b6; margin-bottom:0px;"> (Si solo querés asistir a una función no selecciones nada)  </p>
+           
+    
+                  @if ($evento->precio != $evento->precio_prom)
+                        <p style="color: #2312b6; margin-bottom:0px;">Si sacás entradas para dos funciones <b>tenés  descuento!</b>
+                        Pagás el <b>precio promocional de ${{ $evento->precio_prom }} </b>cada entrada!</p>
+                    @endif
+          
+          
+          
+          
             <div class="row">
                 <div class="col">
-                    <b><label for="funcion2">Selecciona la segunda función (opcional)</label></b>
+                    <!--<b><label for="funcion2">Selecciona la segunda función (opcional)</label></b>-->
                     <select class="form-control" name="funcion2" wire:model="selectedFunc2">
                         <option value="" >------------------------------</option>
                         @foreach ( $funciones as $funcion2)
