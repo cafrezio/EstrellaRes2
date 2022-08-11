@@ -3,16 +3,9 @@
 @section('title','Estrella del Plata')
 
 @section('content')
-
-    @if (session('info'))
-    <div class="alert alert-success">
-        <strong>{{ session('info') }}</strong>
-    </div>
-    @endif
-
-    <h1 style="padding:7px"><i class="fas fa-search"></i>&nbsp;&nbsp;Reservas</h1>
+    <h1 style="padding:7px"><i class="fas fa-ticket-alt "></i>&nbsp;&nbsp;Editar Reserva Nº{{ $reserva->id }}</h1>
     <div class="card">
-        @livewire('admin.reservas')
+        @livewire('admin.edit-reserva', ['reserva'=>$reserva])
     </div>
 
 @stop
@@ -50,5 +43,3 @@
     </script>
  
 @stop
-
-

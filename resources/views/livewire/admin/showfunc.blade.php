@@ -85,10 +85,13 @@
                         <td>{{ $funcion->capacidad }}</td>
                         <td>{{ $funcion->tot_res() }}</td>
                         <td width="10px">
-                            <a class="btn btn-primary btn-sm" href="{{ route('admin.funciones.show', $funcion) }}">Reservas</a>
+                            <a class="btn btn-info btn-sm" href="{{ route('admin.funciones.show', $funcion) }}">Reservas</a>
                         </td>
                         <td width="10px">
                             <a wire:click="$emit('deleteFunc', {{ $funcion->id }})" class="btn btn-danger btn-sm">Eliminar</a>
+                        </td>
+                        <td width="10px">
+                            <a class="btn btn-primary btn-sm" href="{{ route('admin.funciones.edit', [$funcion, $evento]) }}">Editar</a>
                         </td>
                     </tr>
                 @endforeach
