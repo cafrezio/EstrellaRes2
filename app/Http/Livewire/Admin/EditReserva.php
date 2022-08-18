@@ -7,10 +7,12 @@ use App\Models\Evento;
 use App\Models\Generale;
 use App\Models\Reserva;
 use App\Services\SaveResSheet;
+use App\Models\Funcione;
 
-class Newreserva extends Component
+class EditReserva extends Component
 {
     public $eventoSel;
+    public $reserva;
 
     public $selectedFunc1;
     public $cap_func1;
@@ -35,31 +37,72 @@ class Newreserva extends Component
     public $cant_funciones=0;
     public $importe;
 
+    public $test;
+
     protected $rules = [
         'usuario' => 'required|min:3',
         'tel' => 'required|digits:10'
     ];
 
-    public function mount()
+    public function mount(Reserva $reserva)
     {
-        $this->eventoSel = Evento::first()->id;
+        $this->reserva = $reserva;
+        $this->usuario = $reserva->usuario;
+        $this->tel = $reserva->telefono;
+        $this->eventoSel = $reserva->funciones->first()->evento->id;
         $this->sobreventa = Generale::First()->value('sobreventa');
-        $this->entr_seg=0;
-        $this->entr_gral=1;
+        $this->entr_seg=$reserva->cant_esp;
+        $this->entr_gral=$reserva->cant_adul;
 
         $this->precio = Evento::find($this->eventoSel)->precio;
         $this->precio_seg = Evento::find($this->eventoSel)->precio_seg;
+        $this->selectedFunc1 = $reserva->funciones->first()->id;
+        $this->importe = $reserva->importe;
+
+        $func1 = Evento::find($this->eventoSel)->temas_func()->where('func_id','=', $this->selectedFunc1)->first();
+
+        $this->cap_func1 = $func1->capacidad;
+        $this->cap_sob_func1 = $func1->capacidad * (1 + $this->sobreventa/100);
+        $this->reserv_func1 = $func1->cant_total;
+        $this->disp_func1 = $func1->capacidad * (1 + $this->sobreventa/100)-($func1->cant_total);
+
+        $this->precio = Evento::find($this->eventoSel)->precio;
+        $this->cant_funciones=1;
+
+        if($reserva->funciones->count()>1){
+            $this->selectedFunc2 = $reserva->funciones->last()->id;
+
+            $func2 = Evento::find($this->eventoSel)->temas_func()->where('func_id','=', $this->selectedFunc2)->first();
+
+            $this->cap_func2 = $func2->capacidad;
+            $this->cap_sob_func2 = $func2->capacidad * (1 + $this->sobreventa/100);
+            $this->reserv_func2 = $func2->cant_total;
+            $this->disp_func2 = $func2->capacidad * (1 + $this->sobreventa/100)-($func2->cant_total);
+
+            $this->precio = Evento::find($this->eventoSel)->precio_prom;
+            $this->cant_funciones=2;
+
+
+
+        }
+
+
+    
     }
+
 
     public function render()
     {
+        $reserva = $this->reserva;
         $eventos = Evento::all();
         $funciones = Evento::find($this->eventoSel)->temas_func();
-        return view('livewire.admin.newreserva', compact('eventos', 'funciones'));
+        return view('livewire.admin.edit-reserva', compact('eventos', 'funciones', 'reserva'));
     }
 
+    
     public function updatedselectedFunc1($func1_id)
     {
+        
         if ($func1_id>0) {
             $func1 = Evento::find($this->eventoSel)->temas_func()->where('func_id','=', $func1_id)->first();
 
@@ -87,6 +130,7 @@ class Newreserva extends Component
         $this->cap_sob_func2 = null;
         $this->reserv_func2 = null;
         $this->disp_func2 = null;
+        $this->importe = null;
     }
 
 
@@ -113,10 +157,13 @@ class Newreserva extends Component
             $this->precio = Evento::find($this->eventoSel)->precio;
             $this->cant_funciones=1;
         }  
+
+        $this->importe = null;
     }
 
     public function updatedeventoSel()
     {
+        
         $this->selectedFunc1 = null;
         $this->cap_func1 = null;
         $this->cap_sob_func1 = null;
@@ -128,8 +175,12 @@ class Newreserva extends Component
         $this->cap_sob_func2 = null;
         $this->reserv_func2 = null;
         $this->disp_func2 = null;
+        $this->importe = null;
     }
 
+    public function updated(){
+        $this->importe = null;
+    }
 
     public function save()
     {
@@ -137,49 +188,44 @@ class Newreserva extends Component
 
         setlocale(LC_TIME, "spanish");
         
-        $reserva = new Reserva();
+        //$reserva = new Reserva();
 
-        $reserva->codigo_res="123";
+  
         if(is_null($this->importe)){
-            $reserva->importe=$this->entr_gral * $this->precio * $this->cant_funciones + $this->entr_seg * $this->precio_seg * $this->cant_funciones;
+            $this->reserva->importe=$this->entr_gral * $this->precio * $this->cant_funciones + $this->entr_seg * $this->precio_seg * $this->cant_funciones;
         }else{
-            $reserva->importe=$this->importe;
+            $this->reserva->importe=$this->importe;
         }
         
-        $reserva->usuario = $this->usuario;
-        $reserva->telefono = $this->tel;
-        $reserva->cant_adul = $this->entr_gral;
-        $reserva->cant_esp = $this->entr_seg;
-        $reserva->wppconf = '0';
-        $reserva->wpprecord = '0';
+        $this->reserva->usuario = $this->usuario;
+        $this->reserva->telefono = $this->tel;
+        $this->reserva->cant_adul = $this->entr_gral;
+        $this->reserva->cant_esp = $this->entr_seg;
+        $this->reserva->wppconf = '0';
+        $this->reserva->wpprecord = '0';
 
-        $reserva->save();
-        $reserva->codigo_res=str_pad($reserva->id, 4 ,"0", STR_PAD_LEFT);
-        $reserva->save();
+        $this->reserva->save();
 
-        $reserva->funciones()->attach($this->selectedFunc1);
+        $func_att = [$this->selectedFunc1];
+
+        //$this->reserva->funciones()->attach($this->selectedFunc1);
 
         if ($this->selectedFunc2<0) {
             $this->selectedFunc2 = null;
         }
 
         if (!is_null($this->selectedFunc2)) {
-            $reserva->funciones()->attach($this->selectedFunc2);
+            array_push($func_att, $this->selectedFunc2);
         }
 
-        $mensaje = 'Reserva registrada.<br> Código de reserva: <b>' . str_pad($reserva->id, 4 ,"0", STR_PAD_LEFT) . 
-        '</b><br>Detalles enviados por WhatsApp al usuario.'; 
+        $this->reserva->funciones()->sync($func_att);
 
-        $this->reset(['usuario', 'tel']);
-        
-        $this->emit('alerta', $mensaje);
-
-        $resSheet = new SaveResSheet($reserva, Evento::find($this->eventoSel), $this->selectedFunc1, $this->selectedFunc2);
+        $resSheet = new SaveResSheet($this->reserva, Evento::find($this->eventoSel), $this->selectedFunc1, $this->selectedFunc2);
        
-        
-        //$resSheet->save();
-
         $resSheet->wppConf();
+
+        return redirect()->route('admin.reservas.index')->with('info', 'Reserva actualizada con éxito. Se reenvió Whatsapp al Usuario.');
         
     }
 }
+

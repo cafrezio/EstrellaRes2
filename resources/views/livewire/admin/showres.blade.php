@@ -39,6 +39,9 @@
                         <td width="10px">
                             <a wire:click="$emit('deleteReserv', {{ $reserva->id }})" class="btn btn-danger btn-sm">Eliminar</a>
                         </td>
+                        <td width="10px">
+                            <a class="btn btn-primary btn-sm" href="{{ route('admin.reservas.edit', ['reserva'=>$reserva->id]) }}">Editar</a>
+                        </td>
 
                     </tr>
                     

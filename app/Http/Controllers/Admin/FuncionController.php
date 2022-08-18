@@ -49,14 +49,35 @@ class FuncionController extends Controller
     }
 
  
-    public function edit()
+    public function edit(Funcione $funcione)
     {
-        
+        $evento = $funcione->evento;
+        $temas = Tema::pluck('titulo', 'id');
+        return view('admin.funciones.edit', compact('funcione', 'temas', 'evento'));
     }
 
    
-    public function update(Request $request, $id)
+    public function update(Request $request, Funcione $funcione)
     {
+        $request->validate([
+            'tema_id' => 'required',
+            'fecha' => 'required',
+            'horario' => 'required',
+            'capacidad' =>'required'
+        ]);
+
+   
+        $funcione->tema_id = $request->tema_id;
+        $funcione->fecha = $request->fecha;
+        $funcione->horario = $request->horario;
+        $funcione->capacidad = $request->capacidad;
+        $funcione->evento_id = $request->evento_id;
+    
+        $funcione->save();
+
+        $evento = $funcione->evento;
+
+        return redirect()->route('admin.eventos.show', $evento)->with('info', 'La Funcion se actualizó con éxito');
       
     }
 
