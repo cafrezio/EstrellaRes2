@@ -6,13 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Mike4ip\ChatApi;
 
-/*
-MODIFICACION PUNTUAL PARA CASO DE LANUS
-EVENTO GRATUITO CON RECORDATORIO UN DIA ANTES
----ELIMINAR Y RENOMBRAR ARCHIVO Y CLASE WppRecordTaskOrig
-*/
-
-class WppRecordTask extends Command
+class WppRecordTaskOrig extends Command //RENOMBRAR COMO WppRecordTask
 {
     /**
      * The name and signature of the console command.
@@ -55,7 +49,7 @@ class WppRecordTask extends Command
         INNER JOIN funciones as fun ON fun.id = funres.funcione_id
         INNER JOIN temas as tem ON fun.tema_id = tem.id
         INNER JOIN eventos as evt ON fun.evento_id = evt.id
-        WHERE evt.activo = 1 && res.wpprecord = 0  && (fun.fecha = CURRENT_DATE() OR (fun.fecha = CURRENT_DATE() + 1 AND fun.evento_id= 18))
+        WHERE evt.activo = 1 && res.wpprecord = 0  && fun.fecha = CURRENT_DATE()
         ORDER BY res.id  DESC) as res_uniq
         
         INNER JOIN (SELECT reserva_id, min(funres.funcione_id) as f1, MAX(funres.funcione_id) as f2 FROM
@@ -67,28 +61,20 @@ class WppRecordTask extends Command
         (SELECT funciones.id, temas.titulo, funciones.fecha, funciones.horario FROM funciones INNER JOIN temas ON funciones.tema_id = temas.id) as 
         fun1 ON fun1.id = funcs.f1
         INNER JOIN (SELECT funciones.id, temas.titulo, funciones.fecha, funciones.horario FROM funciones INNER JOIN temas ON funciones.tema_id = temas.id) as 
-        fun2 ON fun2.id = funcs.f2;');
+        fun2 ON fun2.id = funcs.f2');
 
-
+/*
+        $api = new ChatApi(
+            'yb7lq7jpotu31kgq', // Chat-Api.com token
+            'https://api.chat-api.com/instance361534' // Chat-Api.com API url
+        );*/
 
         foreach($reservas as $reserva)
         {
             $cel = "549". $reserva->telefono;
-            
-            $fecha_actual = date('Y-m-d');
-
-            echo $reserva->codigo_res;
-
-            if ($reserva->f1_fecha == $fecha_actual)
-            {
-                $mens = "👋 *Hola $reserva->usuario*. Hoy está el *Planetario Móvil* en ";
-            }
-            else
-            {
-                $mens = "👋 *Hola $reserva->usuario*. Mañana está el *Planetario Móvil* en ";
-            }
-            
-             $mens .= "*$reserva->lugar!!* ($reserva->direccion). Te reenviamos los datos de tu reserva para que los tengas a mano: \\n";
+        
+            $mens = "👋 *Hola $reserva->usuario*. Hoy está el *Planetario Móvil* en ";
+            $mens .= "*$reserva->lugar!!* ($reserva->direccion). Te reenviamos los datos de tu reserva para que los tengas a mano: \\n";
             $mens .= "➖➖➖➖➖➖➖\\n"; 
             $mens .= "🔑 CODIGO DE RESERVA: *$reserva->codigo_res*\\n";
             $mens .= "🎫 Cantidad de Entradas: *$reserva->cant_adul*\\n";
@@ -107,30 +93,11 @@ class WppRecordTask extends Command
             }
             $mens .= "-Duración de cada función: *35minutos*-\\n";
             $mens .= "➖➖➖➖➖➖➖\\n"; 
-            
-
-            if ($reserva->f1_fecha == $fecha_actual)
-            {
-                $mens .= "💵 Importe Total: *$". $reserva->importe . "*\\n";
-            }
-            else
-            {
-                $mens .= "*Entrada Gratuita*\\n";
-            }
-            
+            $mens .= "💵 Importe Total: *$". $reserva->importe . "*\\n";
             $mens .= "➖➖➖➖➖➖➖\\n"; 
             $mens .= "*". "¿Cómo y cuándo se retiran las entradas?" . "*\\n";
-            
-            if ($reserva->f1_fecha == $fecha_actual)
-            {
-                $mens .= "Tenés que estar 30 min antes para asegurar tu lugar y abonar la entrada en el lugar del evento. *Si no llegás las entradas pasan a disponibilidad*\\n\\n";
-                $mens .= "*Medios de pago? | Solo en efectivo*\\n\\n";
-            }
-            else
-            {
-                $mens .= "Tenés que estar 30 min antes para asegurar tu lugar y retirar la entrada en el lugar del evento. *Si no llegás las entradas pasan a disponibilidad*\\n\\n";
-            }
-            
+            $mens .= "Tenés que estar 30 min antes para asegurar tu lugar y abonar la entrada en el lugar del evento. *Si no llegás las entradas pasan a disponibilidad*\\n\\n";
+            $mens .= "*Medios de pago? | Solo en efectivo*\\n\\n";
             $mens .= "Por favor sino vas al evento, avísanos, así la reserva se la damos a otra persona que si quiera ir!\\nLa reserva de entradas es *un compromiso de asistencia  al evento*. Pedimos por favor, que no nos fallen. *Gracias!*";
 
             $curl = curl_init();
