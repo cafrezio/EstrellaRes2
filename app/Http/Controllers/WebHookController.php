@@ -3,21 +3,57 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Reserva;
+use Illuminate\Support\Facades\DB;
 
 class WebHookController extends Controller
 {
     public function handle(Request $request)
-  {     
+  { 
+    $mensIn = $request->data['body'];
     $cel = $request->data['fromNumber'];
-        
-    $mens = "Hola!  \\n\\n";
-    $mens.= "comunicarte por:\\n\\n";
-    $mens.= "*Facebook* \\n";
-    $mens.= "👉  https://m.me/EstrellaDelPlataPlanetarioMovil\\n\\n";
-    $mens.= "*Instagram* \\n";
-    $mens.= "👉  https://www.instagram.com/estrelladelplata\\n";
-    $mens.= "➖➖➖➖➖➖➖\\n";
-    $mens.= "Gracias";
+    
+    $mens_proc = strtolower(trim($mensIn));
+    $cel_proc = substr($cel, 4);
+
+    if($mens_proc == "cancelar")
+    {
+      
+      	echo $cel_proc . '\n';
+      
+        $reserv = DB::table('reservas')
+        ->join('funcione_reserva', 'funcione_reserva.reserva_id', '=', 'reservas.id')
+        ->join('funciones', 'funciones.id', '=', 'funcione_reserva.funcione_id')
+        ->join('eventos', 'funciones.evento_id', '=', 'eventos.id')
+        ->select('reservas.id')
+        ->where('telefono', '=', $cel_proc)
+        ->where('eventos.activo', '=', '1')
+        ->orderBy('reservas.id', 'desc')
+        ->first();
+    
+
+        if($reserv != null)
+        {
+          if(Reserva::find($reserv->id)->delete()){
+            $mens = "Tu reserva fue cancelada. Podés realizar una nueva reserva desde https://estrellareservas.com/";
+          }
+        }
+        else{
+          $mens = "No hay reservas registradas con este numero de telefono";
+        }
+ 
+    }
+    else
+    {
+      $mens = "Hola!  \\n\\n";
+      $mens.= "comunicarte por:\\n\\n";
+      $mens.= "*Facebook* \\n";
+      $mens.= "👉  https://m.me/EstrellaDelPlataPlanetarioMovil\\n\\n";
+      $mens.= "*Instagram* \\n";
+      $mens.= "👉  https://www.instagram.com/estrelladelplata\\n";
+      $mens.= "➖➖➖➖➖➖➖\\n";
+      $mens.= "Gracias";
+    }
 
     $curl = curl_init();
 
