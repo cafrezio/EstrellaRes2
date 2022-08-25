@@ -9,6 +9,8 @@ class Reserva extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['asist'];
+
     public function funciones(){
         return $this->belongsToMany('App\Models\Funcione');
     }

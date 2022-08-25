@@ -4,13 +4,6 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
-use Mike4ip\ChatApi;
-
-/*
-MODIFICACION PUNTUAL PARA CASO DE LANUS
-EVENTO GRATUITO CON RECORDATORIO UN DIA ANTES
----ELIMINAR Y RENOMBRAR ARCHIVO Y CLASE WppRecordTaskOrig
-*/
 
 class WppRecordTask extends Command
 {
@@ -55,7 +48,7 @@ class WppRecordTask extends Command
         INNER JOIN funciones as fun ON fun.id = funres.funcione_id
         INNER JOIN temas as tem ON fun.tema_id = tem.id
         INNER JOIN eventos as evt ON fun.evento_id = evt.id
-        WHERE evt.activo = 1 && res.wpprecord = 0  && (fun.fecha = CURRENT_DATE() OR (fun.fecha = CURRENT_DATE() + 1 AND fun.evento_id= 18))
+        WHERE evt.activo = 1 && res.wpprecord = 0  && fun.fecha = CURRENT_DATE()
         ORDER BY res.id  DESC) as res_uniq
         
         INNER JOIN (SELECT reserva_id, min(funres.funcione_id) as f1, MAX(funres.funcione_id) as f2 FROM
@@ -88,7 +81,7 @@ class WppRecordTask extends Command
                 $mens = "👋 *Hola $reserva->usuario*. Mañana está el *Planetario Móvil* en ";
             }
             
-             $mens .= "*$reserva->lugar!!* ($reserva->direccion). Te reenviamos los datos de tu reserva para que los tengas a mano: \\n";
+            $mens .= "*$reserva->lugar!!* ($reserva->direccion). Te reenviamos los datos de tu reserva para que los tengas a mano: \\n";
             $mens .= "➖➖➖➖➖➖➖\\n"; 
             $mens .= "🔑 CODIGO DE RESERVA: *$reserva->codigo_res*\\n";
             $mens .= "🎫 Cantidad de Entradas: *$reserva->cant_adul*\\n";
@@ -109,7 +102,7 @@ class WppRecordTask extends Command
             $mens .= "➖➖➖➖➖➖➖\\n"; 
             
 
-            if ($reserva->f1_fecha == $fecha_actual)
+            if ($reserva->importe > 0)
             {
                 $mens .= "💵 Importe Total: *$". $reserva->importe . "*\\n";
             }
@@ -119,9 +112,12 @@ class WppRecordTask extends Command
             }
             
             $mens .= "➖➖➖➖➖➖➖\\n"; 
+
+            $mens .="La reserva de entradas es un *compromiso de asistencia al evento*. ⚠ Si no vas a asistir escribí la pablara *CANCELAR* así damos de baja tu reserva.\\n\\n";
+
             $mens .= "*". "¿Cómo y cuándo se retiran las entradas?" . "*\\n";
             
-            if ($reserva->f1_fecha == $fecha_actual)
+            if ($reserva->importe > 0)
             {
                 $mens .= "Tenés que estar 30 min antes para asegurar tu lugar y abonar la entrada en el lugar del evento. *Si no llegás las entradas pasan a disponibilidad*\\n\\n";
                 $mens .= "*Medios de pago? | Solo en efectivo*\\n\\n";
@@ -130,8 +126,6 @@ class WppRecordTask extends Command
             {
                 $mens .= "Tenés que estar 30 min antes para asegurar tu lugar y retirar la entrada en el lugar del evento. *Si no llegás las entradas pasan a disponibilidad*\\n\\n";
             }
-            
-            $mens .= "Por favor sino vas al evento, avísanos, así la reserva se la damos a otra persona que si quiera ir!\\nLa reserva de entradas es *un compromiso de asistencia  al evento*. Pedimos por favor, que no nos fallen. *Gracias!*";
 
             $curl = curl_init();
 
@@ -155,9 +149,9 @@ class WppRecordTask extends Command
         
             curl_close($curl);
 
-            $fw = fopen(storage_path('logs/respconf.log'), 'a');
+            /*$fw = fopen(storage_path('logs/respconf.log'), 'a');
             fwrite($fw , $response . PHP_EOL);
-            fclose($fw);
+            fclose($fw);*/
 
             if ($err){
                 continue;

@@ -4,18 +4,19 @@ namespace App\Http\Livewire\Admin;
 
 use Livewire\Component;
 use App\Models\Evento;
-use App\Models\Funcione;
 use Illuminate\Support\Facades\DB;
 
-class ReservaChart extends Component
+
+class AsistenciaGral extends Component
 {
 
     public $eventoSel;
     public $fechaSel;
     public $resTotal;
+    public $asistTotal;
 
     public function render()
-    {   
+    {
         $eventos = Evento::all();
         $fechas = DB::table('funciones')
         ->select('fecha')
@@ -24,11 +25,7 @@ class ReservaChart extends Component
         ->orderBy('fecha')
         ->get();
 
-        return view('livewire.admin.reserva-chart', compact('eventos','fechas'));
-    }
-
-    public function mount(){
-
+        return view('livewire.admin.asistencia-gral', compact('eventos','fechas'));
     }
 
     public function updatedfechaSel(){
@@ -63,8 +60,8 @@ class ReservaChart extends Component
                     temas.titulo, 
                     funciones.fecha, 
                     funciones.horario, 
-                    SUM(reservas.cant_adul + reservas.cant_esp) as reservas,
-                    MAX(funciones.capacidad) - SUM(reservas.cant_adul + reservas.cant_esp) as disponible
+                    SUM(-(reservas.cant_adul + reservas.cant_esp) * (reservas.asist - 1)) as ausentes,
+                    SUM((reservas.cant_adul + reservas.cant_esp) * reservas.asist) as asistencia
                 FROM `reservas`
                 JOIN funcione_reserva ON reservas.id = funcione_reserva.reserva_id
                 JOIN funciones ON funcione_reserva.funcione_id = funciones.id
@@ -81,19 +78,20 @@ class ReservaChart extends Component
                     funciones.id");
 
         $categorias = array();
-        $dataRes = array();
-        $dataLib = array();
+        $dataAsis = array();
+        $dataAus = array();
         $this->resTotal=0;
+        $this->asistTotal=0;
         foreach($dat as $funcion){
             array_push($categorias, $funcion->titulo . " - " . utf8_encode(strftime("%A %d de %B", strtotime($funcion->fecha)))  . " - " . strftime("%H:%M", strtotime($funcion->horario)));
-            array_push($dataRes, $funcion->reservas);
-            array_push($dataLib, $funcion->disponible);
-            $this->resTotal += $funcion->reservas;
+            array_push($dataAsis, $funcion->asistencia);
+            array_push($dataAus, $funcion->ausentes);
+            $this->resTotal += $funcion->asistencia + $funcion->ausentes;
+            $this->asistTotal += $funcion->asistencia;
         }
 
         
         $titulo = Evento::find($this->eventoSel)->lugar . " - " . utf8_encode(strftime("%A %d de %B", strtotime($this->fechaSel)));
-        $this->emit('graph', $titulo, $categorias, $dataRes, $dataLib);
+        $this->emit('graph', $titulo, $categorias, $dataAsis, $dataAus);
     }
-
 }

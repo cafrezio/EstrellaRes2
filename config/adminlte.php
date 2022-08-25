@@ -296,13 +296,25 @@ return [
             'icon'        => 'fas fa-chart-bar',
             'active'      =>  ['admin/ocupacion*'],     
         ],
+
+        [
+            'text'        => 'Asistencia Función',
+            'url'         => 'admin/asistencia',
+            'icon'        => 'fas fa-clipboard-check',
+        ],
+
+        [
+            'text'        => 'Asistencia General',
+            'url'         => 'admin/asistenciagral',
+            'icon'        => 'fas fa-chart-line',
+        ],
                 
         ['header' => 'ADMINISTRADOR'],
         
         [
-            'text' => 'Usuarios',
-            'url'  => 'admin/usuarios',
-            'icon' => 'fas fa-fw fa-lock',
+            'text'       => 'Usuarios',
+            'url'        => 'admin/usuarios',
+            'icon'       => 'fas fa-fw fa-lock',
         ],
         
     ],

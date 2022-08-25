@@ -26,8 +26,13 @@
                     
                 </div>
                 <div class="col">
-                    <br>
-                    <span style="text-align: center"><h3>Total Reservas: <b>  {{ $resTotal }}</b></h3></span>
+                    <span class="badge badge-secondary" style="width:100%"><h5>Reservas: <b> {{ $resTotal }} </b> / Asistencia: <b> {{ $asistTotal }} </h5></span>
+                    <div class="progress" style="height:30px; margin-top:5px">
+                        @if ($resTotal > 0)
+                        <div class="progress-bar " style="width:{{ sprintf("%.0f%%", $asistTotal/$resTotal * 100) }} ;height:30px; background-color:#1ABC9C">{{ sprintf("%.0f%%", $asistTotal/$resTotal * 100) }}</div>
+                        @endif
+                        
+                    </div> 
                 </div>   
             </div>
         </form>

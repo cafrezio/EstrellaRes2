@@ -33,6 +33,14 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/admin/nuevareserva', func
 Route::middleware(['auth:sanctum', 'verified'])->get('/admin/ocupacion', [Ocupacion::class, 'index'])
 ->name('ocupacion');
 
+Route::middleware(['auth:sanctum', 'verified'])->get('/admin/asistencia', function () {
+    return view('admin.asistencia.index');
+})->name('asistencia');
+
+Route::middleware(['auth:sanctum', 'verified'])->get('/admin/asistenciagral', function () {
+    return view('admin.asistenciagral.index');
+})->name('asistencia');
+
 Route::middleware(['auth:sanctum', 'verified'])->get('/admin/eventoprint/{id_event}', [EventoController::class, 'print'])
 ->name('eventoprint');
 
