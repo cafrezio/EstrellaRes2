@@ -2,8 +2,6 @@
     @php
         setlocale(LC_TIME, "spanish");
     @endphp
-    {{ $funcionSel }}
-    {{ $codColorSel }}
     <div class="card-body" style="background-color: {{ $codColorSel }}"  >
         <form>
             <div class="row">
