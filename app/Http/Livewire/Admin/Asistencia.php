@@ -6,11 +6,17 @@ use Livewire\Component;
 use App\Models\Evento;
 use App\Models\Funcione;
 use App\Models\Reserva;
+use App\Models\Colore;
 use Illuminate\Support\Facades\DB;
 use DateTime;
 
 class Asistencia extends Component
 {
+
+    public $eventos;
+    public $colores;
+    public $colorSel;
+    public $codColorSel;
 
     public $eventoSel;
     public $funcionSel;
@@ -18,6 +24,7 @@ class Asistencia extends Component
 
     public $importeGral;
     public $importeMen;
+    public $importeComb;
 
     public $totRes;
     public $totEvento;
@@ -37,19 +44,22 @@ class Asistencia extends Component
         'newUsuario' => 'required|min:3'
     ];
 
-
-
-
     public function render()
     {
-        $eventos = Evento::where('activo', "=", 1)
-        ->get();
-
+        $this->colorSel = Funcione::find($this->funcionSel)->color_id;
+        
+        if ($this->colorSel){
+            $this->codColorSel = Colore::find($this->colorSel)->codigo_color;
+        }else
+        {
+            $this->codColorSel = null;
+        }
+        
         $funciones = Evento::find($this->eventoSel)->temas_func()->sortBy('horario')->sortBy('fecha');
 
         $reservt = DB::select('SELECT res_uniq.id,  usuario, telefono, codigo_res, importe, cant_adul, cant_esp, 
-        f1, f2, asist FROM 
-        (SELECT DISTINCT res.id, res.usuario, res.telefono, res.codigo_res, res.importe, res.cant_adul, res.cant_esp, res.asist FROM 
+        f1, f2, asist, cancel FROM 
+        (SELECT DISTINCT res.id, res.usuario, res.telefono, res.codigo_res, res.importe, res.cant_adul, res.cant_esp, res.asist, res.cancel FROM 
         reservas as res
         INNER JOIN funcione_reserva as funres on res.id = funres.reserva_id
         ORDER BY res.id) as res_uniq
@@ -64,10 +74,16 @@ class Asistencia extends Component
         $this->totIng=0;
         $this->totRes=0;
         $this->totAsist=0;
+        
         foreach ($reservt as $reserva) {
             $this->totRes += $reserva->cant_adul + $reserva->cant_esp;
 
             if(!$reserva->asist){
+                continue;
+            }
+
+            if($reserva->cancel == 1){
+                $reserva->importe=0;  
                 continue;
             }
 
@@ -88,12 +104,16 @@ class Asistencia extends Component
         $this->totEvento = DB::select('SELECT SUM(importe) as total from (SELECT DISTINCT(reservas.id), importe FROM reservas
         JOIN funcione_reserva on reservas.id = funcione_reserva.reserva_id
         JOIN funciones on funcione_reserva.funcione_id = funciones.id
-        WHERE funciones.evento_id = 10 AND reservas.asist = 1) sub;')[0]->total;
+        WHERE funciones.evento_id = 10 AND reservas.asist = 1 AND reservas.cancel = 0) sub;')[0]->total;
 
-        return view('livewire.admin.asistencia', compact('reservt', 'eventos', 'funciones'));
+        return view('livewire.admin.asistencia', compact('reservt', 'funciones'));
     }
 
     public function mount(){
+
+        $this->eventos = Evento::where('activo', "=", 1)
+        ->get();
+
         $this->eventoSel= Evento::where('activo', "=", 1)
             ->first()->id;
 
@@ -102,14 +122,23 @@ class Asistencia extends Component
         $this->newCantAdul=1;
         $this->newCantEsp=0;
         $this->newImporte=$this->importeGral;
+
+        $this->colores = Colore::All();
     }
 
     public function updatedEventoSel(){
         $this->funcionSel = Funcione::where('evento_id', "=", $this->eventoSel)
             ->first()->id;
-        $this->importeGral = Evento::find($this->eventoSel)->precio;
-        $this->importeMen = Evento::find($this->eventoSel)->precio_seg;
+        $evt = Evento::find($this->eventoSel);
+        $this->importeGral = $evt ->precio;
+        $this->importeMen = $evt ->precio_seg;
+        $this->importeComb = $evt ->precio_prom;
     }
+
+    public function updatedFuncionSel(){
+        
+    }
+    
 
     public function changeCantAdul(Reserva $res, $cant_adul){
         $cantFunc = $res->funciones()->count();
@@ -136,7 +165,13 @@ class Asistencia extends Component
 
         $res->funciones()->sync($func_att);
         $cantFunc = $res->funciones()->count();
-        $importe = ($res->cant_esp * $this->importeMen + $res->cant_adul * $this->importeGral) * $cantFunc;
+        if($cantFunc > 1){
+            $importe = ($res->cant_esp * $this->importeMen + $res->cant_adul * $this->importeComb) * 2;
+        }
+        else
+        {
+            $importe = $res->cant_esp * $this->importeMen + $res->cant_adul * $this->importeGral;
+        }
         $res->importe = $importe;
         $res->save();
     }
@@ -145,7 +180,13 @@ class Asistencia extends Component
         $res->update(['asist' => $asist]);
     }
 
+    public function changeCancel(Reserva $res, $cancel){
+        $res->update(['cancel' => $cancel]);
+    }
 
+    public function changeColor($color_id){
+        Funcione::find($this->funcionSel)->update(['color_id' => $color_id]);
+    }
 
     public function changeNewFun2($newFun2){
         $this->newFun2= $newFun2;
@@ -163,8 +204,14 @@ class Asistencia extends Component
     }
 
     public function actImporte(){
-        ($this->newFun2 > 0)? $cantfunc = 2 : $cantfunc = 1;
-        $this->newImporte = ($this->newCantEsp * $this->importeMen + $this->newCantAdul * $this->importeGral) * $cantfunc;
+        if ($this->newFun2 > 0){
+            $this->newImporte = ($this->newCantEsp * $this->importeMen + $this->newCantAdul * $this->importeComb)*2;
+        }
+        else
+        {
+            $this->newImporte = ($this->newCantEsp * $this->importeMen + $this->newCantAdul * $this->importeGral);
+        }
+        
     }
 
     public function save(){

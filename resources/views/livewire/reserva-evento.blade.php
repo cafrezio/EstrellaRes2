@@ -19,12 +19,12 @@
             <input type="text" class="form-control" name="evento_id" value="{{ $evento->id }}" readonly hidden>
             <div class="row">
                 <div class="col-md-6">
-                    <b><label for="usuario" class="form-label">Tu Nombre:</label></b>
+                    <b><label for="usuario" class="form-label"><i class="fa fa-user"></i> Tu Nombre:</label></b>
                     <input type="text" class="form-control" placeholder="Tu nombre" name="usuario" required wire:model="usuario">
                     <x-jet-input-error for="usuario"/> 
                 </div>
                 <div class="col-md-6">
-                    <b><label for="telefono" class="form-label">Celular:</label></b>
+                    <b><label for="telefono" class="form-label"><i class="fa fa-mobile"></i> Celular:</label></b>
                     <input type="number" class="form-control" name="telefono" placeholder="Sin 0 y sin 15 Ej: 1160208707" required wire:model="tel">
                     <x-jet-input-error for="tel"/> 
                 </div>
@@ -32,7 +32,7 @@
             <br>
             <div class="row">
                 <div class="col">
-                    <b><label for="funcion1">Selecciona la primer función</label></b>
+                    <b><label for="funcion1"><i class="fa fa-bullhorn"></i> Selecciona la primer función</label></b>
                     <select class="form-control" name="funcion1" wire:model="selectedFunc1">
                         @foreach ($funciones as $funcion)
                             @if ($funcion->func_id == $func_id )
@@ -50,21 +50,21 @@
                     </select>
                 </div>
             </div>
-            <br>
+
+            @if ($evento->precio != $evento->precio_prom)
+                <p style="color: #ffffff; 
+                background-color: #4c3ee1;
+                padding: 10px 20px;
+                text-align: center;
+                border-radius: 10px;
+                margin-top: 10px;">Si sacás entradas para dos funciones <b>tenés  descuento!</b>
+                Pagás el <b>precio promocional de ${{ $evento->precio_prom }} </b>cada entrada!</p>
+            @endif
           
-          <p style="color: #2312b6; margin-bottom:0px;">
-            <b>Si querés sacar entradas para dos funciones seleccioná la segunda función abajo.</b></p>
-           <p style="color: #2312b6; margin-bottom:0px;"> (Si solo querés asistir a una función no selecciones nada)  </p>
+            <p style="color: #2312b6; margin-bottom:0px;">
+                <b>Si querés sacar entradas para dos funciones seleccioná la segunda función abajo.</b></p>
+            <p style="color: #2312b6; margin-bottom:0px;"> (Si solo querés asistir a una función no selecciones nada)  </p>
            
-    
-                  @if ($evento->precio != $evento->precio_prom)
-                        <p style="color: #2312b6; margin-bottom:0px;">Si sacás entradas para dos funciones <b>tenés  descuento!</b>
-                        Pagás el <b>precio promocional de ${{ $evento->precio_prom }} </b>cada entrada!</p>
-                    @endif
-          
-          
-          
-          
             <div class="row">
                 <div class="col">
                     <!--<b><label for="funcion2">Selecciona la segunda función (opcional)</label></b>-->
@@ -84,7 +84,7 @@
     
             <div class="row">
                 <div class="col-md-4">
-                    <b><label for="cant_adul">Cantidad de Entradas:</label></b>
+                    <b><label for="cant_adul"><i class="fa fa-ticket"></i> Cantidad de Entradas:</label></b>
                     <select class="form-control" name="cant_adul" wire:model="entr_gral">
                         @for ($i=1; $i <= $maxEntr; $i++ )
                             <option value="{{ $i }}">{{ $i }}</option>
@@ -93,7 +93,7 @@
                     <p>Mayores de 3 años ${{ $precio }}c/u.</p>
                 </div>
                 <div class="col-md-4">
-                    <b><label for="cant_men">Cantidad seguros:</label></b>
+                    <b><label for="cant_men"><i class="fa fa-ticket"></i> Cantidad seguros:</label></b>
                     <select class="form-control" name="cant_men" wire:model="entr_seg">
                         @for ($i=0; $i <= $maxEntr - $entr_gral; $i++ )
                             <option value="{{ $i }}">{{ $i }}</option>

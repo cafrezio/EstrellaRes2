@@ -10,7 +10,7 @@ class Funcione extends Model
 {
     use HasFactory;
 
-    protected $fillable= ['evento_id', 'capacidad', 'horario', 'fecha', 'tema_id'];
+    protected $fillable= ['evento_id', 'capacidad', 'horario', 'fecha', 'tema_id', 'color_id'];
     
     public function evento(){
         return $this->belongsTo('App\Models\Evento');

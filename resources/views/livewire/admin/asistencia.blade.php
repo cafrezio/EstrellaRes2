@@ -2,7 +2,9 @@
     @php
         setlocale(LC_TIME, "spanish");
     @endphp
-    <div class="card-body">
+    {{ $funcionSel }}
+    {{ $codColorSel }}
+    <div class="card-body" style="background-color: {{ $codColorSel }}"  >
         <form>
             <div class="row">
                 <div class="col">
@@ -20,7 +22,14 @@
                             <option value="{{ $funcion->func_id }}">{{ $funcion->titulo }} - {{ utf8_encode(strftime("%A %d de %B", strtotime($funcion->fecha))) }} - {{ strftime("%H:%M", strtotime($funcion->horario ))}}</option>    
                         @endforeach
                     </select>
-                    
+                </div>
+                <div class="col">
+                    <b><label for="funcion">Color de entrada</label></b>
+                    <select class="form-control" name="funcion" wire:change="changeColor($event.target.value)">
+                        @foreach ($colores as $color)
+                            <option value="{{ $color->id }}" {{ ($colorSel === $color->id)?'selected' : '' }}>{{ $color->color }}</option>    
+                        @endforeach
+                    </select>
                 </div>
                 <div class="col">
                     <span class="badge badge-secondary" style="width:100%"><h5>Reservas: <b> {{ $totRes }} </b> / Asistencia: <b> {{ $totAsist }} </h5></span>
@@ -55,57 +64,97 @@
                         <th>Importe</th>
                         <th>Seg Func</th>
                         <th>Asist</th>
+                        <th>Cancel</th>
                     </tr>
                 </thead>
                 @foreach ($reservt as $reserva)
-                    <tr {{ ($reserva->asist === 1)? 'class=table-success' : '' }}>
+                    @php
+                        if ($reserva->cancel == 1){
+                            $classrow = 'table-danger';
+                        }   
+                        elseif ($reserva->asist == 1){
+                            $classrow = 'table-success';
+                        }    
+                        else {
+                            $classrow = '';
+                        }
+                    @endphp
+                    <tr class={{ $classrow }}>
                         <td>{{ $reserva->codigo_res }}</td>
-                        <td>{{ $reserva->usuario }}</td>
+                        <td>
+                            <span class="badge" style="background-color: {{ $codColorSel }}; font-size: 100%; border: 1px solid gray">
+                                {{ $reserva->usuario }}
+                            </span>  
+                                                   
+                        
+                        </td>
                         <td>{{ $reserva->telefono }}</td>
                         <td>
-                            <select class="form-control rowh" name="cant_adul" wire:change="changeCantAdul({{ $reserva->id }}, $event.target.value)">
-                                @for ($i=1; $i <= 10; $i++ )
-                                    <option value="{{ $i }}" {{ ($i === $reserva->cant_adul)? 'selected' : '' }}>{{ $i }}</option>
-                                @endfor
-                            </select>
+                            @if ($reserva->asist == 1)
+                                {{ $reserva->cant_adul }}
+                            @else
+                                <select class="form-control rowh" name="cant_adul" wire:change="changeCantAdul({{ $reserva->id }}, $event.target.value)">
+                                    @for ($i=1; $i <= 10; $i++ )
+                                        <option value="{{ $i }}" {{ ($i === $reserva->cant_adul)? 'selected' : '' }}>{{ $i }}</option>
+                                    @endfor
+                                </select>
+                            @endif
                         </td>
                         <td>
-                            <select class="form-control rowh" name="cant_esp" wire:change="changeCantEsp({{ $reserva->id }}, $event.target.value)">
-                                @for ($i=0; $i <= 10; $i++ )
-                                    <option value="{{ $i }}" {{ ($i === $reserva->cant_esp)? 'selected' : '' }}>{{ $i }}</option>
-                                @endfor
-                            </select>
+                            @if ($reserva->asist == 1)
+                                {{ $reserva->cant_esp }}
+                            @else
+                                <select class="form-control rowh" name="cant_esp" wire:change="changeCantEsp({{ $reserva->id }}, $event.target.value)">
+                                    @for ($i=0; $i <= 10; $i++ )
+                                        <option value="{{ $i }}" {{ ($i === $reserva->cant_esp)? 'selected' : '' }}>{{ $i }}</option>
+                                    @endfor
+                                </select>
+                            @endif
                         </td>
                         <td>${{ $reserva->importe }}</td>
 
                         <td>
-                            <select class="form-control rowh" name="funcion2" wire:change="changeFunc2({{ $reserva->id }}, $event.target.value)">
-                                @php
-                                    $otraFunc = -1;
-                                    if($reserva->f1 != $funcionSel)
-                                    {
-                                        $otraFunc = $reserva->f1;
-                                    }
-                                    if($reserva->f2 != $funcionSel)
-                                    {
-                                        $otraFunc = $reserva->f2;
-                                    }
-                                @endphp
-                                <option value="-1">---------</option>
+                            @php
+                                $otraFunc = -1;
+                                if($reserva->f1 != $funcionSel)
+                                {
+                                    $otraFunc = $reserva->f1;
+                                }
+                                if($reserva->f2 != $funcionSel)
+                                {
+                                    $otraFunc = $reserva->f2;
+                                }
+                            @endphp
+                            @if ($reserva->asist == 1)
                                 @foreach ($funciones as $funcion)
-                                    @if ($funcion->func_id != $funcionSel && $funcion->id != $temaFunSel)
-                                        <option value="{{ $funcion->func_id }}" {{ ($funcion->func_id == $otraFunc)? 'selected' : '' }}>
+                                    @if ($funcion->func_id == $otraFunc)
+                                        <span class="badge" style="background-color: {{ $funcion->codigo_color }}; font-size: 100%; border: 1px solid white">
                                             {{ $funcion->titulo }} - {{ utf8_encode(strftime("%A %d de %B", strtotime($funcion->fecha))) }} - {{ strftime("%H:%M", strtotime($funcion->horario ))}}
-                                        </option>  
+                                        </span>  
                                     @endif  
                                 @endforeach
-                            </select>
+                            @else
+                                <select class="form-control rowh" name="funcion2" wire:change="changeFunc2({{ $reserva->id }}, $event.target.value)">
+                                    <option value="-1">---------</option>
+                                    @foreach ($funciones as $funcion)
+                                        @if ($funcion->func_id != $funcionSel && $funcion->id != $temaFunSel)
+                                            <option value="{{ $funcion->func_id }}" {{ ($funcion->func_id == $otraFunc)? 'selected' : '' }}>
+                                                {{ $funcion->titulo }} - {{ utf8_encode(strftime("%A %d de %B", strtotime($funcion->fecha))) }} - {{ strftime("%H:%M", strtotime($funcion->horario ))}}
+                                            </option>  
+                                        @endif  
+                                    @endforeach
+                                </select>
+                            @endif
                         </td>
-
-                        
-
                         <td>
-                            <input type="checkbox" {{ ($reserva->asist === 1)? 'checked' : '' }} wire:change="changeAsist({{ $reserva->id }}, $event.target.checked)">
+                            @if ($reserva->asist == 0)
+                                <input type="checkbox" wire:change="changeAsist({{ $reserva->id }}, $event.target.checked)">
+                            @endif            
+                        </td>
+                        <td>
+                            @if ($reserva->asist == 1)
+                                <input type="checkbox" {{ ($reserva->cancel === 1)? 'checked' : '' }} wire:change="changeCancel({{ $reserva->id }}, $event.target.checked)">
+                            @endif   
                         </td>
 
                     </tr>

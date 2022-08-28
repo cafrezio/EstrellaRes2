@@ -25,8 +25,9 @@ class Evento extends Model
 
         $temas_funcs = DB::table('eventos')
             ->join('funciones', 'eventos.id', '=', 'funciones.evento_id')
+            ->leftjoin('colores','funciones.color_id','=', 'colores.id')
             ->join('temas', 'funciones.tema_id', '=', 'temas.id')
-            ->select('temas.id', 'temas.titulo', 'temas.descripcion', 'temas.imagen', 'temas.video', 'temas.duracion', 'fecha', 'horario', 'capacidad', DB::raw('COALESCE(cant_total,0) as cant_total'), 'funciones.id as func_id')
+            ->select('temas.id', 'temas.titulo', 'temas.descripcion', 'temas.imagen', 'temas.video', 'temas.duracion', 'fecha', 'horario', 'capacidad', DB::raw('COALESCE(cant_total,0) as cant_total'), 'funciones.id as func_id', 'colores.id', 'colores.codigo_color')
             ->orderBy('temas.id')->orderBy('fecha')->orderBy('horario')
             ->where('eventos.id', '=', $this->id)
             ->leftjoinSub($func_ent, 'func_ent', function ($join) {
