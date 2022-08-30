@@ -9,20 +9,22 @@
     </div>
     @endif
 
-   
-
     <h1 style="padding:7px"><i class="fas fa-bullhorn"></i>&nbsp;&nbsp;Eventos</h1>
-    <div class="card">
-        <div class="card-header">
-            <a href="{{ route('admin.eventos.create') }}" class="btn btn-primary">Agregar Evento</a>    
-        </div> 
-        @livewire('admin.testliv')
-    </div>
+   
+        <div class="card">
+            @can('admin.eventos.create')
+                <div class="card-header">
+                    <a href="{{ route('admin.eventos.create') }}" class="btn btn-primary">Agregar Evento</a>    
+                </div> 
+            @endcan
+            @livewire('admin.testliv')
+        </div>   
+    
 
 @stop
 
 @section('css')
-    <link rel="stylesheet" href="/css/admin.css">
+
 @stop
 
 @section('js')

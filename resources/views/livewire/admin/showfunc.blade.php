@@ -7,56 +7,58 @@
 
         <div class="card-header">
             <h2>Evento: {{ $evento->lugar }} </h2>
-        </div>    
-
-        <div class="card-body">
-            {!! Form::open(['route' =>'admin.funciones.store']) !!}
-                <div class="row">
-                    <div class="col">
-                        <div class="form-group">
-                            {!! Form::label('tema_id', 'Tema') !!}
-                            {!! Form::select('tema_id', $temas, null, ['class'=> 'form-control']) !!}
-                            @error('tema_id')
+        </div>
+           
+        @can('admin.funciones.create')
+            <div class="card-body">
+                {!! Form::open(['route' =>'admin.funciones.store']) !!}
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                {!! Form::label('tema_id', 'Tema') !!}
+                                {!! Form::select('tema_id', $temas, null, ['class'=> 'form-control']) !!}
+                                @error('tema_id')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                {!! Form::label('fecha', 'Fecha') !!}
+                                {!! Form::date('fecha', null, ['class'=> 'form-control']) !!}  
+                            </div>
+                            @error('fecha')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
-                    </div>
-                    <div class="col">
-                        <div class="form-group">
-                            {!! Form::label('fecha', 'Fecha') !!}
-                            {!! Form::date('fecha', null, ['class'=> 'form-control']) !!}  
+                        <div class="col">
+                            <div class="form-group">
+                                {!! Form::label('horario', 'Horario') !!}
+                                {!! Form::time('horario', null, ['class'=> 'form-control']) !!}  
+                            </div>
+                            @error('horario')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
                         </div>
-                        @error('fecha')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div class="col">
-                        <div class="form-group">
-                            {!! Form::label('horario', 'Horario') !!}
-                            {!! Form::time('horario', null, ['class'=> 'form-control']) !!}  
+                        <div class="col">
+                            <div class="form-group">
+                                {!! Form::label('capacidad', 'Capacidad') !!}
+                                {!! Form::number('capacidad', 60,['class'=> 'form-control']) !!}  
+                            </div>
+                            @error('capacidad')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror                        
                         </div>
-                        @error('horario')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
+                        {!! Form::text('evento_id', $evento->id,['class'=> 'd-none']) !!}  
                     </div>
-                    <div class="col">
-                        <div class="form-group">
-                            {!! Form::label('capacidad', 'Capacidad') !!}
-                            {!! Form::number('capacidad', 60,['class'=> 'form-control']) !!}  
-                        </div>
-                        @error('capacidad')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror                        
-                    </div>
-                    {!! Form::text('evento_id', $evento->id,['class'=> 'd-none']) !!}  
-                </div>
-                          
+                            
 
-                {!! Form::submit('Agregar Función', ['class' => 'btn btn-primary']) !!}
-                
-            {!! Form::close() !!}
-    
-        </div>
+                    {!! Form::submit('Agregar Función', ['class' => 'btn btn-primary']) !!}
+                    
+                {!! Form::close() !!}
+        
+            </div>
+        @endcan
     </div>
 
     <div class="card">
@@ -88,7 +90,10 @@
                             <a class="btn btn-info btn-sm" href="{{ route('admin.funciones.show', $funcion) }}">Reservas</a>
                         </td>
                         <td width="10px">
-                            <a wire:click="$emit('deleteFunc', {{ $funcion->id }})" class="btn btn-danger btn-sm">Eliminar</a>
+                            @can('admin.funciones.destroy')
+                                <a wire:click="$emit('deleteFunc', {{ $funcion->id }})" class="btn btn-danger btn-sm">Eliminar</a>
+                            @endcan
+                               
                         </td>
                         <td width="10px">
                             <a class="btn btn-primary btn-sm" href="{{ route('admin.funciones.edit', [$funcion, $evento]) }}">Editar</a>

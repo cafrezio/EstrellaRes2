@@ -63,6 +63,7 @@
                         <th>Nombre</th>
                         <th>Email</th>
                         <th></th>
+                        <th></th>
                     </tr>
                 </thead>
                 @foreach ($usuarios as $usuario)
@@ -70,6 +71,9 @@
                         <td>{{ $usuario->id }}</td>
                         <td>{{ $usuario->name }}</td>
                         <td>{{ $usuario->email }}</td>
+                        <td width="10px">
+                            <a class="btn btn-primary btn-sm" href="{{ route('admin.usuarios.edit', $usuario) }}">Editar</a>
+                        </td>
                         <td width="10px">
                             <form action="{{ route('admin.usuarios.destroy', $usuario) }}" method="POST">
                                 @csrf

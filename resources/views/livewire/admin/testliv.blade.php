@@ -10,7 +10,14 @@
                     <th>Precio Promo</th>
                     <th>Precio Seguro</th>
                     <th>Activo</th>
-                    <th colspan="4"></th>
+                    <th ></th>
+                    @can('admin.eventos.edit')
+                        <th ></th>
+                    @endcan
+                    @can('admin.eventos.destroy')
+                        <th ></th>
+                    @endcan
+                    <th ></th>
                 </tr>
             </thead>
             <tbody>
@@ -34,12 +41,19 @@
                         <td width="10px">
                             <a class="btn btn-info btn-sm" href="{{ route('admin.eventos.show', $evento) }}">Funciones</a>
                         </td>
-                        <td width="10px">
-                            <a class="btn btn-primary btn-sm" href="{{ route('admin.eventos.edit', $evento) }}">Editar</a>
-                        </td>
-                        <td width="10px">
-                            <a wire:click="$emit('deleteEvent', {{ $evento->id }})" class="btn btn-danger btn-sm">Eliminar</a>
-                        </td>
+
+                        @can('admin.eventos.edit')
+                            <td width="10px">
+                                <a class="btn btn-primary btn-sm" href="{{ route('admin.eventos.edit', $evento) }}">Editar</a>
+                            </td>
+                        @endcan
+
+
+                        @can('admin.eventos.destroy')
+                            <td width="10px">
+                                <a wire:click="$emit('deleteEvent', {{ $evento->id }})" class="btn btn-danger btn-sm">Eliminar</a>
+                            </td>
+                        @endcan
                         <td>
                             <a class="btn btn-secondary btn-sm" href="{{ route('eventoprint', $evento) }}" target="_blank">Imprimir Reservas</a>
                         </td>

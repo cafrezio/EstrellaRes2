@@ -142,18 +142,17 @@
 
 <div class="row mb-3">
     <div class="col-sm-9">
+        {!! Form::label('imagen', 'Imagen del Evento') !!}
         <div class="image-wrapper">
+            
             @isset($evento->imagen)
                 <img id="imagen_evento" src="{{ Storage::url($evento->imagen) }}" alt="">
             @else
                 <img id="imagen_evento" src="{{ Storage::url ($general->imagen) }}" alt="">
             @endif
         </div>
-    </div>
 
-    <div class="col-sm-3">
         <div class="form-group">
-            {!! Form::label('imagen', 'Imagen del Evento') !!}
             {!! Form::file('imagen', ['class' => 'form-control-file', 'accept' => 'image/*']) !!}
             <p>Selecciona una imagen. Medida recomendada:  1250 x 320 pixeles.</p>
 
@@ -163,8 +162,24 @@
 
 
         </div>
+    </div>
+
+    <div class="col-sm-3">
+        <div class="form-group">
+            {!! Form::label('users', 'Cobrador Asignado') !!}
+            @foreach ($users as $user)
+                <div>
+                    <label>
+                        {!! Form::checkbox('users[]', $user->id, null, ['class' => 'mr-1']) !!}
+                        {{ $user->name }}
+                    </label>
+                </div>
+            @endforeach
+        </div>
 
     </div>
+
+                        
 
 </div>
 

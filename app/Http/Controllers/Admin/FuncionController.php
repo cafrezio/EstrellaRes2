@@ -11,6 +11,14 @@ use App\Models\Funcione;
 class FuncionController extends Controller
 {
 
+    public function __construct()
+    {
+        $this->middleware('can:admin.funciones.index')->only('index');
+        $this->middleware('can:admin.funciones.edit')->only('edit', 'update');
+        $this->middleware('can:admin.funciones.create')->only('create');
+        $this->middleware('can:admin.funciones.destroy')->only('destroy');
+    }
+
 
     public function index(Evento $evento)
     {

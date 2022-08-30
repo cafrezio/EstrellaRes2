@@ -237,21 +237,13 @@ return [
         ],
 
         // Sidebar items:
-        [
-            'type' => 'sidebar-menu-search',
-            'text' => 'search',
-        ],
-        [
-            'text' => 'blog',
-            'url'  => 'admin/blog',
-            'can'  => 'manage-blog',
-        ],
-        ['header' => 'CONFIGURACIONES'],
+
 
         [
             'text'        => 'Generales',
             'route'       => 'admin.generales.index',
             'icon'        => 'fas fa-fw fa-tools',
+            'can'         => 'admin.generales.edit',
         ],
 
         [
@@ -259,6 +251,7 @@ return [
             'url'         => 'admin/eventos',
             'icon'        => 'fas fa-bullhorn',
             'active'      =>  ['admin/eventos*'],   
+            'can'         => 'admin.eventos.index',   
       
         ],
       
@@ -266,55 +259,61 @@ return [
             'text'        => 'Temas',
             'url'         => 'admin/temas',
             'icon'        => 'fas fa-book-open',
-            'active'      =>  ['admin/temas*'],     
+            'active'      =>  ['admin/temas*'],  
+            'can'         => 'admin.temas',   
         ],
 
         [
             'text'        => 'Buscar Reservas',
             'url'         => 'admin/reservas',
             'icon'        => 'fas fa-search',
-            'active'      =>  ['admin/reservas*'],     
+            'active'      =>  ['admin/reservas*'], 
+            'can'         => 'admin.reservas',     
         ],
 
         [
             'text'        => 'Nueva Reserva',
             'url'         => 'admin/nuevareserva',
             'icon'        => 'fas fa-ticket-alt',
-            'active'      =>  ['admin/nuevareserva*'],     
+            'active'      =>  ['admin/nuevareserva*'],
+            'can'         => 'admin.newreserva'        
         ],
 
         [
             'text'        => 'Mensajes',
             'url'         => 'admin/mensajes',
             'icon'        => 'fab fa-whatsapp',
-            'active'      =>  ['admin/mensajes*'],     
+            'active'      =>  ['admin/mensajes*'],  
+            'can'         => 'admin.mensajes',     
         ],
 
         [
             'text'        => 'Ocupación',
             'url'         => 'admin/ocupacion',
             'icon'        => 'fas fa-chart-bar',
-            'active'      =>  ['admin/ocupacion*'],     
+            'active'      =>  ['admin/ocupacion*'],
+            'can'         => 'admin.ocupacion'      
         ],
 
         [
             'text'        => 'Asistencia Función',
             'url'         => 'admin/asistencia',
             'icon'        => 'fas fa-clipboard-check',
+            'can'         => 'admin.asistenciafuncion' 
         ],
 
         [
             'text'        => 'Asistencia General',
             'url'         => 'admin/asistenciagral',
             'icon'        => 'fas fa-chart-line',
+            'can'         => 'admin.asistenciagral' 
         ],
-                
-        ['header' => 'ADMINISTRADOR'],
-        
+            
         [
             'text'       => 'Usuarios',
             'url'        => 'admin/usuarios',
             'icon'       => 'fas fa-fw fa-lock',
+            'can'         => 'admin.users',
         ],
         
     ],

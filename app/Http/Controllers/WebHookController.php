@@ -10,6 +10,13 @@ class WebHookController extends Controller
 {
     public function handle(Request $request)
   { 
+    
+
+    if (!isset($request->data['body'])){
+      echo "NO BODY";
+      return;
+    }
+    
     $mensIn = $request->data['body'];
     $cel = $request->data['fromNumber'];
     

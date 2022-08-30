@@ -8,6 +8,7 @@ use App\Models\Funcione;
 use App\Models\Reserva;
 use App\Models\Colore;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use DateTime;
 
 class Asistencia extends Component
@@ -104,18 +105,27 @@ class Asistencia extends Component
         $this->totEvento = DB::select('SELECT SUM(importe) as total from (SELECT DISTINCT(reservas.id), importe FROM reservas
         JOIN funcione_reserva on reservas.id = funcione_reserva.reserva_id
         JOIN funciones on funcione_reserva.funcione_id = funciones.id
-        WHERE funciones.evento_id = 10 AND reservas.asist = 1 AND reservas.cancel = 0) sub;')[0]->total;
+        WHERE funciones.evento_id = ' . $this->eventoSel . ' AND reservas.asist = 1 AND reservas.cancel = 0) sub;')[0]->total;
 
         return view('livewire.admin.asistencia', compact('reservt', 'funciones'));
     }
 
     public function mount(){
 
-        $this->eventos = Evento::where('activo', "=", 1)
-        ->get();
+        //dd(Auth::user()->eventos->where('activo', '=', 1));
+        if(Auth::user()->hasRole('Cobrador')){
+            $this->eventos = Auth::user()->eventos->where('activo', '=', 1);
+        }
+        else
+        {
+            $this->eventos = Evento::where('activo', '=', 1)->get();
+        }
 
-        $this->eventoSel= Evento::where('activo', "=", 1)
-            ->first()->id;
+        
+
+        $this->eventoSel= $this->eventos->first()->id;
+
+        //$this->eventoSel= Evento::where('activo', "=", 1)->first()->id;
 
         $this->updatedEventoSel();
 
@@ -133,6 +143,9 @@ class Asistencia extends Component
         $this->importeGral = $evt ->precio;
         $this->importeMen = $evt ->precio_seg;
         $this->importeComb = $evt ->precio_prom;
+        $this->newCantAdul=1;
+        $this->newCantEsp=0;
+        $this->newImporte=$this->importeGral;
     }
 
     public function updatedFuncionSel(){

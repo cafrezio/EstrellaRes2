@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class UsuarioController extends Controller
 {
@@ -44,14 +45,30 @@ class UsuarioController extends Controller
         //
     }
 
-    public function edit($id)
+    public function edit($userv)
     {
-        //
+        $user = User::find($userv);
+        $roles = Role::all();
+        return view('admin.usuarios.edit', compact('user', 'roles'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $userM)
     {
-        //
+        $user = User::find($userM);
+
+        $request->validate([
+            'name' => 'required',
+            'email' =>'required'
+        ]);
+
+        $user->name = $request->name;
+        $user->email = $request->email;
+
+        $user->save();
+        $user->roles()->sync($request->roles);
+
+        return redirect()->route('admin.usuarios.index')->with('info', 'Usuario modificado con éxito');
+
     }
 
     public function destroy(User $usuario)

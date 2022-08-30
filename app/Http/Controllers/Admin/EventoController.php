@@ -7,40 +7,35 @@ use App\Models\Evento;
 use Illuminate\Http\Request;
 use App\Models\Generale;
 use App\Models\Tema;
-
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 use Illuminate\Support\Facades\Storage;
 
 class EventoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    public function __construct()
+    {
+        $this->middleware('can:admin.eventos.index')->only('index');
+        $this->middleware('can:admin.eventos.edit')->only('edit', 'update');
+        $this->middleware('can:admin.eventos.create')->only('create');
+        $this->middleware('can:admin.eventos.destroy')->only('destroy');
+    }
+
     public function index()
     {
         $eventos= Evento::orderBy('activo', 'desc')->get();
         return view('admin.eventos.index', compact('eventos'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function create()
     {
+        $users = User::all();
         $general = Generale::first();
-        return view('admin.eventos.create', compact('general'));
+        return view('admin.eventos.create', compact('general', 'users'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $request->validate([
@@ -91,37 +86,19 @@ class EventoController extends Controller
         return redirect()->route('admin.eventos.index')->with('info', 'El Evento se creó con éxito');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show(Evento $evento)
     {
         $temas = Tema::pluck('titulo', 'id');
         return view('admin.eventos.show', compact('evento', 'temas'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit(Evento $evento)
     {
         $general = Generale::first();
-        return  view('admin.eventos.edit', compact('evento', 'general'));
+        $users = User::all();
+        return  view('admin.eventos.edit', compact('evento', 'general', 'users'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, Evento $evento)
     {
         $request->validate([
@@ -158,21 +135,26 @@ class EventoController extends Controller
         }
 
         $evento->save();
+
+        $evento->users()->sync($request->users);
    
         return redirect()->route('admin.eventos.index')->with('info', 'El Evento se actualizó con éxito');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Evento $evento)
     {
         $evento->delete();
         return redirect()->route('admin.eventos.index')->with('info', 'El Evento se eliminó con éxito');
     }
 
+    public function asignUsers($evento)
+    {
+        $evento = Evento::find($evento);
+        $users = User::all();
+        return view('admin.eventos.asignusers', compact('evento', 'users'));
+    }
 
+    public function updateusers(Request $request, Evento $evento){
+
+    }
 }

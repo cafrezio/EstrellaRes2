@@ -16,6 +16,10 @@ class Evento extends Model
         return $this->hasMany('App\Models\Funcione');
     }
 
+    public function users(){
+        return $this->belongsToMany('App\Models\User');
+    }
+
     public function temas_func(){
         $func_ent = DB::table('funcione_reserva')
         ->join('reservas', 'reservas.id', '=', 'funcione_reserva.reserva_id')
