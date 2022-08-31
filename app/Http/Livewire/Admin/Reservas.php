@@ -39,6 +39,7 @@ class Reservas extends Component
         ->where('usuario','like','%' . $this->searchUser . '%')
         ->where('telefono','like','%' . $this->searchTel. '%')
         ->where('reservas.id','like','%' . $this->searchCod . '%')
+        ->where('activo','=', 1)
         ->orderByDesc('eventos.activo')
         ->orderBy('reservas.id')
         ->limit(30)

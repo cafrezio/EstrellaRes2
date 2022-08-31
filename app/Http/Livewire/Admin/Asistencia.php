@@ -47,6 +47,10 @@ class Asistencia extends Component
 
     public function render()
     {
+        if(count($this->eventos) == 0){
+            return view('livewire.admin.asistencia');
+        }
+        
         $this->colorSel = Funcione::find($this->funcionSel)->color_id;
         
         if ($this->colorSel){
@@ -121,7 +125,9 @@ class Asistencia extends Component
             $this->eventos = Evento::where('activo', '=', 1)->get();
         }
 
-        
+        if(count($this->eventos) == 0){
+            return;
+        }
 
         $this->eventoSel= $this->eventos->first()->id;
 
