@@ -22,12 +22,12 @@
                         <b><label for="funcion">Seleccione la funcion</label></b>
                         <select class="form-control" name="funcion" wire:model="funcionSel">
                             @foreach ($funciones as $funcion)
-                                <option value="{{ $funcion->func_id }}">{{ $funcion->titulo }} - {{ utf8_encode(strftime("%A %d de %B", strtotime($funcion->fecha))) }} - {{ strftime("%H:%M", strtotime($funcion->horario ))}}</option>    
+                                <option value="{{ $funcion->func_id }}">{{ $funcion->titulo }} - {{ utf8_encode(strftime("%a %d/%m", strtotime($funcion->fecha))) }} - {{ strftime("%H:%M", strtotime($funcion->horario ))}}</option>    
                             @endforeach
                         </select>
                     </div>
-                    <div class="col">
-                        <b><label for="funcion">Color de entrada</label></b>
+                    <div class="col-md-1">
+                        <b><label for="funcion">Color</label></b>
                         <select class="form-control" name="funcion" wire:change="changeColor($event.target.value)">
                             @foreach ($colores as $color)
                                 <option value="{{ $color->id }}" {{ ($colorSel === $color->id)?'selected' : '' }}>{{ $color->color }}</option>    
