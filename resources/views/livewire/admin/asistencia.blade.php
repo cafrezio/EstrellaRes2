@@ -65,7 +65,7 @@
                             <th>Cant_Adul</th>
                             <th>Cant_Esp</th>
                             <th>Importe</th>
-                            <th>Seg Func</th>
+                            <th style="min-width: 235px;">Seg Func</th>
                             <th>Asist</th>
                             <th>Cancel</th>
                         </tr>
@@ -132,7 +132,7 @@
                                     @foreach ($funciones as $funcion)
                                         @if ($funcion->func_id == $otraFunc)
                                             <span class="badge" style="background-color: {{ $funcion->codigo_color }}; font-size: 100%; border: 1px solid white">
-                                                {{ $funcion->titulo }} - {{ utf8_encode(strftime("%A %d de %B", strtotime($funcion->fecha))) }} - {{ strftime("%H:%M", strtotime($funcion->horario ))}}
+                                                {{ $funcion->titulo }} - {{ utf8_encode(strftime("%a %d/%m", strtotime($funcion->fecha))) }} - {{ strftime("%H:%M", strtotime($funcion->horario ))}} 
                                             </span>  
                                         @endif  
                                     @endforeach
@@ -142,7 +142,7 @@
                                         @foreach ($funciones as $funcion)
                                             @if ($funcion->func_id != $funcionSel && $funcion->id != $temaFunSel)
                                                 <option value="{{ $funcion->func_id }}" {{ ($funcion->func_id == $otraFunc)? 'selected' : '' }}>
-                                                    {{ $funcion->titulo }} - {{ utf8_encode(strftime("%A %d de %B", strtotime($funcion->fecha))) }} - {{ strftime("%H:%M", strtotime($funcion->horario ))}}
+                                                    {{ $funcion->titulo }} - {{ utf8_encode(strftime("%a %d/%m", strtotime($funcion->fecha))) }} - {{ strftime("%H:%M", strtotime($funcion->horario ))}} 
                                                 </option>  
                                             @endif  
                                         @endforeach

@@ -52,8 +52,8 @@ class WebHookController extends Controller
     }
     else
     {
-      $mens = "Hola!  \\n\\n";
-      $mens.= "comunicarte por:\\n\\n";
+      $mens = "*MENSAJE AUTOMATICO*\\n";
+      $mens.= "comunicate por:\\n\\n";
       $mens.= "*Facebook* \\n";
       $mens.= "👉  https://m.me/EstrellaDelPlataPlanetarioMovil\\n\\n";
       $mens.= "*Instagram* \\n";
