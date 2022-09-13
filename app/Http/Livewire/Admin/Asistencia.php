@@ -29,6 +29,7 @@ class Asistencia extends Component
 
     public $totRes;
     public $totEvento;
+    public $totAsistEvento;
     public $totAsist;
     public $totIng;
 
@@ -111,6 +112,11 @@ class Asistencia extends Component
         JOIN funciones on funcione_reserva.funcione_id = funciones.id
         WHERE funciones.evento_id = ' . $this->eventoSel . ' AND reservas.asist = 1 AND reservas.cancel = 0) sub;')[0]->total;
 
+        $this->totAsistEvento = DB::select('SELECT SUM(cant_adul + cant_esp) as totalent from (SELECT reservas.id, cant_adul, cant_esp  FROM reservas
+        JOIN funcione_reserva on reservas.id = funcione_reserva.reserva_id
+        JOIN funciones on funcione_reserva.funcione_id = funciones.id
+        WHERE funciones.evento_id = ' . $this->eventoSel . ' AND reservas.asist = 1 AND reservas.cancel = 0) sub;')[0]->totalent;
+
         return view('livewire.admin.asistencia', compact('reservt', 'funciones'));
     }
 
@@ -161,7 +167,16 @@ class Asistencia extends Component
 
     public function changeCantAdul(Reserva $res, $cant_adul){
         $cantFunc = $res->funciones()->count();
-        $importe = ($res->cant_esp * $this->importeMen + $cant_adul * $this->importeGral) * $cantFunc;
+        //$importe = ($res->cant_esp * $this->importeMen + $cant_adul * $this->importeGral) * $cantFunc;
+
+
+        if($cantFunc > 1){
+            $importe = ($res->cant_esp * $this->importeMen + $cant_adul * $this->importeComb) * 2;
+        }
+        else
+        {
+            $importe = $res->cant_esp * $this->importeMen + $cant_adul * $this->importeGral;
+        }
         $res->cant_adul = $cant_adul;
         $res->importe = $importe;
         $res->save();
@@ -169,7 +184,16 @@ class Asistencia extends Component
 
     public function changeCantEsp(Reserva $res, $cant_esp){
         $cantFunc = $res->funciones()->count();
-        $importe = ($cant_esp * $this->importeMen + $res->cant_adul * $this->importeGral) * $cantFunc;
+        //$importe = ($cant_esp * $this->importeMen + $res->cant_adul * $this->importeGral) * $cantFunc;
+
+        if($cantFunc > 1){
+            $importe = ($cant_esp * $this->importeMen + $res->cant_adul * $this->importeComb) * 2;
+        }
+        else
+        {
+            $importe = $cant_esp * $this->importeMen + $res->cant_adul * $this->importeGral;
+        }
+
         $res->cant_esp = $cant_esp;
         $res->importe = $importe;
         $res->save();

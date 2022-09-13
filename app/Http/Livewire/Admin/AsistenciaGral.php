@@ -15,6 +15,9 @@ class AsistenciaGral extends Component
     public $resTotal;
     public $asistTotal;
 
+    public $totEvento;
+    public $totAsistEvento;
+
     public function render()
     {
         $eventos = Evento::all();
@@ -51,6 +54,16 @@ class AsistenciaGral extends Component
             $this->datos();
         }
 
+        $this->totEvento = DB::select('SELECT SUM(importe) as total from (SELECT DISTINCT(reservas.id), importe FROM reservas
+        JOIN funcione_reserva on reservas.id = funcione_reserva.reserva_id
+        JOIN funciones on funcione_reserva.funcione_id = funciones.id
+        WHERE funciones.evento_id = ' . $this->eventoSel . ' AND reservas.asist = 1 AND reservas.cancel = 0) sub;')[0]->total;
+
+        $this->totAsistEvento = DB::select('SELECT SUM(cant_adul + cant_esp) as totalent from (SELECT reservas.id, cant_adul, cant_esp  FROM reservas
+        JOIN funcione_reserva on reservas.id = funcione_reserva.reserva_id
+        JOIN funciones on funcione_reserva.funcione_id = funciones.id
+        WHERE funciones.evento_id = ' . $this->eventoSel . ' AND reservas.asist = 1 AND reservas.cancel = 0) sub;')[0]->totalent;
+
     }
 
     public function datos(){
@@ -60,8 +73,8 @@ class AsistenciaGral extends Component
                     temas.titulo, 
                     funciones.fecha, 
                     funciones.horario, 
-                    SUM(-(reservas.cant_adul + reservas.cant_esp) * (reservas.asist - 1)) as ausentes,
-                    SUM((reservas.cant_adul + reservas.cant_esp) * reservas.asist) as asistencia
+                    SUM(-(reservas.cant_adul + reservas.cant_esp) * (reservas.asist - reservas.cancel - 1)) as ausentes,
+                    SUM((reservas.cant_adul + reservas.cant_esp) * (reservas.asist - reservas.cancel)) as asistencia
                 FROM `reservas`
                 JOIN funcione_reserva ON reservas.id = funcione_reserva.reserva_id
                 JOIN funciones ON funcione_reserva.funcione_id = funciones.id
