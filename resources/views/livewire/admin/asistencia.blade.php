@@ -10,7 +10,7 @@
         <div class="card-body" style="background-color: {{ $codColorSel }}"  >
             <form>
                 <div class="row">
-                    <div class="col">
+                    <div class="col" style="min-width: 280px">
                         <b><label for="evento">Seleccione el Evento</label></b>
                         <select class="form-control" name="evento" wire:model="eventoSel">
                             @foreach ($eventos as $evento)
