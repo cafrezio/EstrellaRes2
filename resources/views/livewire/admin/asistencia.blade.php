@@ -46,7 +46,13 @@
                     <div class="col">
                         <span style="text-align: center"><h4>Total Función: <b> {{ '$ ' . number_format($totIng) }} </b></h4></span>
                         <span style="text-align: center"><h5>Total Evento: {{ '$ ' . number_format($totEvento) }} </h5></span>
-                        <span style="text-align: center"><h5>Asist: {{number_format($totAsistEvento) }} | Prom: {{ '$' . number_format($totEvento / $totAsistEvento) }}</h5></span>
+                        <span style="text-align: center"><h5>Asist: {{number_format($totAsistEvento) }} | Prom: 
+                            @if($totAsistEvento == 0)
+                                $ 0
+                            @else
+                                {{ '$' . number_format($totEvento / $totAsistEvento )}}
+                            @endif
+                        </h5></span>
                     </div>   
 
                 </div>
