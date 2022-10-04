@@ -86,7 +86,9 @@ class ReservaEvento extends Component
 
     public function updatedselectedFunc2($func2_id)
     {
+        
         if ($func2_id == null) {
+            $this->selectedFunc2 = null;
             $this->precio = $this->evento->precio;
             $this->cant_funciones=1;
         }

@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\GeneraleController;
 use App\Http\Controllers\Admin\ReservaController;
 use App\Http\Controllers\Admin\TemaController;
 use App\Http\Controllers\Admin\UsuarioController;
+use App\Http\Controllers\Admin\RendicionController;
 
 Route::resource('generales', GeneraleController::class)->middleware('can:admin.generales.edit')->names('admin.generales');
 
@@ -21,3 +22,5 @@ Route::resource('funciones', FuncionController::class)->names('admin.funciones')
 Route::resource('reservas', ReservaController::class)->names('admin.reservas')->middleware('can:admin.reservas');
 
 Route::resource('usuarios', UsuarioController::class)->middleware('can:admin.users')->names('admin.usuarios');
+
+Route::resource('rendicion', RendicionController::class)->middleware('can:admin.rendiciones.edit')->names('admin.rendicion');

@@ -8,9 +8,8 @@
         <strong>{{ session('info') }}</strong>
     </div>
     @endif
-
+    
     <h1 style="padding:7px"><i class="fas fa-bullhorn"></i>&nbsp;&nbsp;Eventos</h1>
-   
         <div class="card">
             @can('admin.eventos.create')
                 <div class="card-header">
@@ -19,8 +18,6 @@
             @endcan
             @livewire('admin.testliv')
         </div>   
-    
-
 @stop
 
 @section('css')

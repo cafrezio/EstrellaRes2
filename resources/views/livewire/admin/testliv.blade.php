@@ -1,14 +1,15 @@
 <div>
+    @php
+        setlocale(LC_TIME, "spanish");
+    @endphp
     <div class="card-body">
         <table class="table table-striped">
             <thead>
                 <tr>
                     <th>Id</th>
                     <th>Lugar</th>
-                    <th>Direccion</th>
-                    <th>Precio</th>
-                    <th>Precio Promo</th>
-                    <th>Precio Seguro</th>
+                    <th>Fecha Ini</th>
+                    <th>Fecha Fin</th>
                     <th>Activo</th>
                     <th ></th>
                     @can('admin.eventos.edit')
@@ -22,13 +23,16 @@
             </thead>
             <tbody>
                 @foreach ($eventos as $evento)
-                    <tr>
+                    <tr
+                    @if ($evento->activo)
+                        style="font-weight: bold;"
+                    @endif 
+                        style="color: gray;"
+                    >
                         <td>{{ $evento->id }}</td>
                         <td>{{ $evento->lugar }}</td>
-                        <td>{{ $evento->direccion }}</td>
-                        <td>$ {{ $evento->precio }}</td>
-                        <td>$ {{ $evento->precio_prom }}</td>
-                        <td>$ {{ $evento->precio_seg }}</td>
+                        <td>{{ utf8_encode(strftime("%a %d/%m/%Y", strtotime($evento->inicio ))) }}</td>
+                        <td>{{ utf8_encode(strftime("%a %d/%m/%Y", strtotime($evento->final ))) }}</td>
                         <td>
                             <div class="form-check form-switch">
                                 <input class="form-check-input" type="checkbox" id="mySwitch" name="darkmode" value="yes"
@@ -39,12 +43,12 @@
                             </div>
                         </td>
                         <td width="10px">
-                            <a class="btn btn-info btn-sm" href="{{ route('admin.eventos.show', $evento) }}">Funciones</a>
+                            <a class="btn btn-info btn-sm" href="{{ route('admin.eventos.show', $evento->id) }}">Funciones</a>
                         </td>
 
                         @can('admin.eventos.edit')
                             <td width="10px">
-                                <a class="btn btn-primary btn-sm" href="{{ route('admin.eventos.edit', $evento) }}">Editar</a>
+                                <a class="btn btn-primary btn-sm" href="{{ route('admin.eventos.edit', $evento->id) }}">Editar</a>
                             </td>
                         @endcan
 
@@ -55,7 +59,7 @@
                             </td>
                         @endcan
                         <td>
-                            <a class="btn btn-secondary btn-sm" href="{{ route('eventoprint', $evento) }}" target="_blank">Imprimir Reservas</a>
+                            <a class="btn btn-secondary btn-sm" href="{{ route('eventoprint', $evento->id) }}" target="_blank">Imprimir Reservas</a>
                         </td>
                     </tr>    
                 @endforeach

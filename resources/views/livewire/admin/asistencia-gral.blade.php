@@ -10,7 +10,12 @@
                     <select class="form-control" name="evento" wire:model="eventoSel">
                         <option value="-1">--------</option>  
                         @foreach ($eventos as $evento)
-                            <option value="{{ $evento->id }}">{{ $evento->lugar }} </option>                                   
+                            <option value="{{ $evento->id }}">
+                                {{ $evento->lugar . " - " . utf8_encode(strftime("%d/%m/%Y", strtotime($evento->inicio )))}} 
+                                @if ($evento->activo)
+                                      (ACTIVO)
+                                @endif
+                            </option>                                   
                         @endforeach
                     </select>
                 </div>

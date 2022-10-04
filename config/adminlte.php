@@ -308,6 +308,13 @@ return [
             'icon'        => 'fas fa-chart-line',
             'can'         => 'admin.asistenciagral' 
         ],
+
+        [
+            'text'        => 'Rendiciones',
+            'url'         => 'admin/rendiciones',
+            'icon'        => 'fas fa-money-bill-alt',
+            'can'         => 'admin.rendiciones.edit' 
+        ],
             
         [
             'text'       => 'Usuarios',

@@ -32,8 +32,8 @@ class EditReserva extends Component
     public $precio;
     public $precio_seg;
 
-    public $entr_gral;
-    public $entr_seg;
+    public $entrgral;
+    public $entrseg;
     public $cant_funciones=0;
     public $importe;
 
@@ -51,8 +51,8 @@ class EditReserva extends Component
         $this->tel = $reserva->telefono;
         $this->eventoSel = $reserva->funciones->first()->evento->id;
         $this->sobreventa = Generale::First()->value('sobreventa');
-        $this->entr_seg=$reserva->cant_esp;
-        $this->entr_gral=$reserva->cant_adul;
+        $this->entrseg=$reserva->cant_esp;
+        $this->entrgral=$reserva->cant_adul;
 
         $this->precio = Evento::find($this->eventoSel)->precio;
         $this->precio_seg = Evento::find($this->eventoSel)->precio_seg;
@@ -81,13 +81,7 @@ class EditReserva extends Component
 
             $this->precio = Evento::find($this->eventoSel)->precio_prom;
             $this->cant_funciones=2;
-
-
-
-        }
-
-
-    
+        }    
     }
 
 
@@ -178,7 +172,11 @@ class EditReserva extends Component
         $this->importe = null;
     }
 
-    public function updated(){
+    public function updatedentrgral(){
+        $this->importe = null;
+    }
+
+    public function updatedentrseg(){
         $this->importe = null;
     }
 
@@ -192,15 +190,15 @@ class EditReserva extends Component
 
   
         if(is_null($this->importe)){
-            $this->reserva->importe=$this->entr_gral * $this->precio * $this->cant_funciones + $this->entr_seg * $this->precio_seg * $this->cant_funciones;
+            $this->reserva->importe=$this->entrgral * $this->precio * $this->cant_funciones + $this->entrseg * $this->precio_seg * $this->cant_funciones;
         }else{
             $this->reserva->importe=$this->importe;
         }
         
         $this->reserva->usuario = $this->usuario;
         $this->reserva->telefono = $this->tel;
-        $this->reserva->cant_adul = $this->entr_gral;
-        $this->reserva->cant_esp = $this->entr_seg;
+        $this->reserva->cant_adul = $this->entrgral;
+        $this->reserva->cant_esp = $this->entrseg;
         $this->reserva->wppconf = '0';
         $this->reserva->wpprecord = '0';
 

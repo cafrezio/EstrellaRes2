@@ -6,6 +6,7 @@ use App\Http\Controllers\EventoController;
 use App\Http\Livewire\ShowEventos;
 use App\Http\Controllers\Admin\GeneraleController;
 use App\Http\Controllers\Admin\IndexController;
+use App\Http\Controllers\Admin\RendicionController;
 use App\Http\Controllers\WebHookController;
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/admin', [IndexController::class, 'index'])->name('admin');
@@ -29,8 +30,15 @@ Route::middleware(['auth:sanctum', 'verified'])->middleware('can:admin.asistenci
     return view('admin.asistenciagral.index');
 })->name('asistencia');
 
+Route::middleware(['auth:sanctum', 'verified'])->middleware('can:admin.rendiciones.edit')->get('/admin/rendiciones', function () {
+    return view('admin.rendiciones.index');
+})->name('rendiciones');
+
 Route::middleware(['auth:sanctum', 'verified'])->get('/admin/eventoprint/{id_event}', [EventoController::class, 'print'])
 ->name('eventoprint');
+
+Route::middleware(['auth:sanctum', 'verified'])->get('/admin/rendicionprint/{id_rend}', [RendicionController::class, 'print'])
+->name('rendicionprint');
 
 //Route::get('users/report', 'UsersController@report');
 

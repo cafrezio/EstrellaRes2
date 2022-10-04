@@ -16,7 +16,9 @@ class ReservaChart extends Component
 
     public function render()
     {   
-        $eventos = Evento::all();
+        $eventos = Evento::all()
+                ->where('activo','=','1');
+
         $fechas = DB::table('funciones')
         ->select('fecha')
         ->distinct()

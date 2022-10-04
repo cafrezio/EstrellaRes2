@@ -40,97 +40,107 @@
                 </div>
             </div>
         </div>
-@if($evento->fechas()->count() > 0)
-        @php
-        $entdisp=false;
-        foreach($evento->temas_func() as $funcion)
-        {
-            $disp = ($funcion->capacidad * (1 + $sobreventa/100))-($funcion->cant_total);
-            $disp = round($disp, 0, PHP_ROUND_HALF_DOWN);
-            if($disp > 0)
+@if ($evento->activo==0)
+    <div class="cont-func">
+        <div style="text-align: center">
+            <h1 class="tit-rck text-center">😯 Lo sentimos... este evento ya no se encuentra activo</h1> 
+            <h2></h2>
+            <a style="font-size: 1.2em; font-weight:bold; margin:10px" href="{{ route('home') }}" class="btn btn-outline-dark"><i class="fa fa-arrow-left" aria-hidden="true"></i>  ir a la página principal</a>
+        </div>        
+    </div>
+@else
+
+
+    @if($evento->fechas()->count() > 0)
+            @php
+            $entdisp=false;
+            foreach($evento->temas_func() as $funcion)
             {
-                $entdisp=true;
-                break;
+                $disp = ($funcion->capacidad * (1 + $sobreventa/100))-($funcion->cant_total);
+                $disp = round($disp, 0, PHP_ROUND_HALF_DOWN);
+                if($disp > 0)
+                {
+                    $entdisp=true;
+                    break;
+                }
             }
-        }
-        @endphp
-   
-        <div class="cont-func">
-            <div>
+            @endphp
+    
+            <div class="cont-func">
+                <div>
+                    @if ($entdisp)
+                        <h1 class="tit-rck text-center">Funciones Disponibles</h1>
+                    @else
+                        <h1 class="tit-rck text-center">Entradas Agotadas</h1>
+                    @endif
+                
+                </div>
+                
                 @if ($entdisp)
-                    <h1 class="tit-rck text-center">Funciones Disponibles</h1>
-                @else
-                    <h1 class="tit-rck text-center">Entradas Agotadas</h1>
+                    <div class="cont-btn">
+                        @livewire('reserva-evento', ['evento'=>$evento], key('-1'))  
+                    </div>
                 @endif
-               
+                
             </div>
             
-            @if ($entdisp)
-                <div class="cont-btn">
-                    @livewire('reserva-evento', ['evento'=>$evento], key('-1'))  
-                </div>
-            @endif
-            
-        </div>
-        
-        <div class="row" >
-            <div><div><div>
-            @foreach ( $evento->temas_func() as $funcion)
+            <div class="row" >
+                <div><div><div>
+                @foreach ( $evento->temas_func() as $funcion)
 
-                    @if ($funcion->id != $tema)
-                        </div></div></div>
-                        <div class="col-md-6 col-lg-4 mt-4">
-                            <div class="card" style="width:100%; height:100%; margin-bottom:10px">
-                                <img class="card-img-top" src="storage/{{ $funcion->imagen }}" alt="Card image" style="width:100%">
-                                <div class="card-body">
-                                    <h4 class="card-title tit-rck">{{ $funcion->titulo }} </h4>
-                                    <p class="card-text" style="color: #7d7e7e;">{{ $funcion->descripcion }} </p>
+                        @if ($funcion->id != $tema)
+                            </div></div></div>
+                            <div class="col-md-6 col-lg-4 mt-4">
+                                <div class="card" style="width:100%; height:100%; margin-bottom:10px">
+                                    <img class="card-img-top" src="storage/{{ $funcion->imagen }}" alt="Card image" style="width:100%">
+                                    <div class="card-body">
+                                        <h4 class="card-title tit-rck">{{ $funcion->titulo }} </h4>
+                                        <p class="card-text" style="color: #7d7e7e;">{{ $funcion->descripcion }} </p>
+                                    
                                 
-                            
-                            @php
-                                $tema =  $funcion->id;
-                                $fecha=0;
-                            @endphp     
-                    @endif
+                                @php
+                                    $tema =  $funcion->id;
+                                    $fecha=0;
+                                @endphp     
+                        @endif
 
-                    @if ($funcion->fecha != $fecha)
-                        <br>
-                        <h4 style="color: #042c9d"><b>
-                            <i class="fa fa-calendar" aria-hidden="true"></i> {{ utf8_encode(strftime("%A %d de %B", strtotime($funcion->fecha))) }}
-                        </h4></b>
-                      
-                        @php
-                            $fecha = $funcion->fecha
-                        @endphp
+                        @if ($funcion->fecha != $fecha)
+                            <br>
+                            <h4 style="color: #042c9d"><b>
+                                <i class="fa fa-calendar" aria-hidden="true"></i> {{ utf8_encode(strftime("%A %d de %B", strtotime($funcion->fecha))) }}
+                            </h4></b>
                         
-                    @endif
-                    @php
-                        $disp = ($funcion->capacidad * (1 + $sobreventa/100))-($funcion->cant_total);
-                        $disp = round($disp, 0, PHP_ROUND_HALF_DOWN);
-                    @endphp
+                            @php
+                                $fecha = $funcion->fecha
+                            @endphp
+                            
+                        @endif
+                        @php
+                            $disp = ($funcion->capacidad * (1 + $sobreventa/100))-($funcion->cant_total);
+                            $disp = round($disp, 0, PHP_ROUND_HALF_DOWN);
+                        @endphp
 
-                    <hr>
-                    <div class="flexh">
-                        <div class="hor">
-                            <p style="margin-bottom: 0px; font-size: 1.1em;"><b>{{ strftime("%H:%M", strtotime($funcion->horario))}} hs.</b></p> 
-                            @if ($disp > 0)
-                                {{ min($disp, rand(10,25)) }} disponibles 
-                            @endif
+                        <hr>
+                        <div class="flexh">
+                            <div class="hor">
+                                <p style="margin-bottom: 0px; font-size: 1.1em;"><b>{{ strftime("%H:%M", strtotime($funcion->horario))}} hs.</b></p> 
+                                @if ($disp > 0)
+                                    {{ min($disp, rand(10,25)) }} disponibles 
+                                @endif
+                            </div>
+                            <div class="btnres">
+                                @if ($disp > 0)
+                                    @livewire('reserva-evento', ['evento'=>$evento, 'func_id'=>$funcion->func_id], key($funcion->func_id))
+                                @else
+                                    Entradas agotadas 
+                                @endif
+                            </div>
                         </div>
-                        <div class="btnres">
-                            @if ($disp > 0)
-                                @livewire('reserva-evento', ['evento'=>$evento, 'func_id'=>$funcion->func_id], key($funcion->func_id))
-                            @else
-                                Entradas agotadas 
-                            @endif
-                        </div>
-                    </div>
-                    
-            @endforeach
-        </div>
+                        
+                @endforeach
+            </div>
+    @endif
 @endif
-
-        @livewire('save-res')
     </div>
 
 </x-app-layout>
