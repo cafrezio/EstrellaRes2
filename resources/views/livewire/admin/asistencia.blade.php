@@ -215,7 +215,12 @@
                         </td>
                         <td>
                             <button class="btn btn-sm btn-primary" wire:click="save">
-                                +
+                                Agregar
+                            </button>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-success" wire:click="save(true)">
+                                Gratis
                             </button>
                         </td>
                         

@@ -257,7 +257,7 @@ class Asistencia extends Component
         
     }
 
-    public function save(){
+    public function save(bool $free = null){
         $this->validate();
 
         if($this->newTelefono == null)
@@ -268,7 +268,16 @@ class Asistencia extends Component
         $newRes = new Reserva();
         $newRes->usuario = $this->newUsuario;
         $newRes->telefono = $this->newTelefono;
-        $newRes->importe = $this->newImporte;
+
+        if($free){
+            $newRes->importe = 0;
+        }
+        else{
+            $newRes->importe = $this->newImporte;
+        }
+        
+        
+        
         $newRes->cant_adul = $this->newCantAdul;
         $newRes->cant_esp = $this->newCantEsp;
         $newRes->asist = 1;
