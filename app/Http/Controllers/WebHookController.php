@@ -11,7 +11,6 @@ class WebHookController extends Controller
     public function handle(Request $request)
   { 
     
-
     if (!isset($request->data['body'])){
       echo "NO BODY";
       return;
@@ -23,7 +22,11 @@ class WebHookController extends Controller
     $mens_proc = strtolower(trim($mensIn));
     $cel_proc = substr($cel, 4);
 
-    if($mens_proc == "cancelar")
+    $mensCancel = array("cancelar", "cancela", "*cancela*", "*cancelar*", 
+                        "canselar", "cansela", "*cansela*", "*canselar*", 
+                        "canzelar", "canzela", "*canzela*", "*canzelar*");
+
+    if(in_array($mens_proc, $mensCancel))
     {
       
       	echo $cel_proc . '\n';

@@ -141,6 +141,7 @@
             </div>
     @endif
 @endif
+        @livewire('save-res')
     </div>
 
 </x-app-layout>
