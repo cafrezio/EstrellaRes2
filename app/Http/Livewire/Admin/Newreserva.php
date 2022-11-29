@@ -8,6 +8,8 @@ use App\Models\Generale;
 use App\Models\Reserva;
 use App\Services\SaveResSheet;
 
+use function PHPUnit\Framework\isNull;
+
 class Newreserva extends Component
 {
     public $eventoSel;
@@ -42,7 +44,10 @@ class Newreserva extends Component
 
     public function mount()
     {
-        $this->eventoSel = Evento::first()->id;
+        if(!Evento::all()->where('activo','=','1')->first())
+            return;
+
+        $this->eventoSel = Evento::all()->where('activo','=','1')->first()->id;
         $this->sobreventa = Generale::First()->value('sobreventa');
         $this->entr_seg=0;
         $this->entr_gral=1;
@@ -53,8 +58,15 @@ class Newreserva extends Component
 
     public function render()
     {
-        $eventos = Evento::all();
-        $funciones = Evento::find($this->eventoSel)->temas_func();
+        $funciones =[];
+        $eventos = Evento::all()->where('activo','=','1');
+
+        
+        if(!isNull($eventos))
+        {
+            $funciones = Evento::find($this->eventoSel)->temas_func();
+        }
+        
         return view('livewire.admin.newreserva', compact('eventos', 'funciones'));
     }
 

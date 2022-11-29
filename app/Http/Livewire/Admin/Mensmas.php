@@ -6,6 +6,7 @@ use Livewire\Component;
 use App\Models\Evento;
 use App\Services\AvisoWpp;
 use App\Models\Funcione;
+use Illuminate\Support\Facades\DB;
 
 use function PHPUnit\Framework\isNull;
 
@@ -25,7 +26,15 @@ class Mensmas extends Component
 
     public function render()
     {   
-        $eventos = Evento::all();
+        $eventos = DB::table('eventos')
+        ->select('eventos.id', 'eventos.lugar', 'eventos.activo', DB::raw('MIN(funciones.fecha)as inicio'), DB::raw('MAX(funciones.fecha) as final'))
+        ->join('funciones', 'funciones.evento_id', '=', 'eventos.id')
+        ->groupBy('eventos.id', 'eventos.lugar', 'eventos.activo')
+        ->orderBy('activo', 'desc')
+        ->orderBy('inicio', 'desc')
+        ->limit(10)
+        ->get();
+        //$eventos = Evento::all();
         $funciones = Evento::find($this->eventoSel)->temas_func();     
         return view('livewire.admin.mensmas', compact('eventos', 'funciones'));
     }
