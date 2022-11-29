@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use DateTime;
+use App\Models\Evento;
 
 class WppServOk extends Command
 {
@@ -46,8 +46,9 @@ class WppServOk extends Command
         $stringDate = date('d-m-y H:i');
         $hora = 0;
         $hora = date('H', strtotime($stringDate));
+        $evtAct = Evento::all()->where('activo','=','1');
 
-        if ($hora <= 8) {
+        if ($evtAct && $hora <= 8) {
             return;
         }
 
