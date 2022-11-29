@@ -68,19 +68,10 @@ class WppRecordTask extends Command
         {
             $cel = "549". $reserva->telefono;
             
-            $fecha_actual = date('Y-m-d');
-
             echo $reserva->codigo_res;
 
-            if ($reserva->f1_fecha == $fecha_actual)
-            {
-                $mens = "👋 *Hola $reserva->usuario*. Hoy está el *Planetario Móvil* en ";
-            }
-            else
-            {
-                $mens = "👋 *Hola $reserva->usuario*. Mañana está el *Planetario Móvil* en ";
-            }
-            
+            $mens = "👋 *Hola $reserva->usuario*. Hoy está el *Planetario Móvil* en ";
+
             $mens .= "*$reserva->lugar!!* ($reserva->direccion). Te reenviamos los datos de tu reserva para que los tengas a mano: \\n";
             $mens .= "➖➖➖➖➖➖➖\\n"; 
             $mens .= "🔑 CODIGO DE RESERVA: *$reserva->codigo_res*\\n";
