@@ -62,7 +62,7 @@ class Newreserva extends Component
         $eventos = Evento::all()->where('activo','=','1');
 
         
-        if(!isNull($eventos))
+        if(!is_null($eventos))
         {
             $funciones = Evento::find($this->eventoSel)->temas_func();
         }
