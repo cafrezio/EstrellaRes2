@@ -1,13 +1,16 @@
 <div>
+
     <x-jet-danger-button wire:click="$set('open', true)">
         Reservar Entradas
     </x-jet-danger-button>
 
     <x-jet-dialog-modal wire:model="open">
+
         <x-slot name='title'>
             <div class="tit_res">
-                <h3><b> Reserva de Entradas - {{ $evento->lugar }} </b></h3>
+                <h3 style="color: #2312b6"><b> Reserva de Entradas - {{ $evento->lugar }} </b></h3>
             </div>
+
         </x-slot>
         <x-slot name='content'>
             @php
@@ -37,8 +40,8 @@
                         <select class="form-control" name="funcion1" wire:model="selectedFunc1">
                             @foreach ($funciones as $funcion)
                             @if ($funcion->func_id == $func_id )
-                            <option value="{{ $funcion->func_id }}">{{ $funcion->titulo }} - {{ utf8_encode(strftime("%a
-                                %d/%m", strtotime($funcion->fecha))) }} - {{ strftime("%H:%M",
+                            <option value="{{ $funcion->func_id }}">{{ $funcion->titulo }} - {{ utf8_encode(strftime("%A
+                                %d de %B", strtotime($funcion->fecha))) }} - {{ strftime("%H:%M",
                                 strtotime($funcion->horario ))}}</option>
                             @endif
 
@@ -46,8 +49,8 @@
                             @foreach ( $funciones as $funcion)
                             @if ($funcion->func_id != $func_id && ($funcion->capacidad * (1 +
                             $sobreventa/100)-($funcion->cant_total) > 0))
-                            <option value="{{ $funcion->func_id }}">{{ $funcion->titulo }} - {{ utf8_encode(strftime("%a
-                                %d/%m", strtotime($funcion->fecha))) }} - {{ strftime("%H:%M",
+                            <option value="{{ $funcion->func_id }}">{{ $funcion->titulo }} - {{ utf8_encode(strftime("%A
+                                %d de %B", strtotime($funcion->fecha))) }} - {{ strftime("%H:%M",
                                 strtotime($funcion->horario ))}}
                             </option>
                             @endif
@@ -69,19 +72,24 @@
                 @endif
 
                 <p style="color: #2312b6; margin-bottom:0px;">
-                    <b>Si querés sacar entradas para dos funciones seleccioná la segunda función abajo.</b></p>
-                <p style="color: #2312b6; margin-bottom:0px;"> (Si solo querés asistir a una función no selecciones nada)  </p>
+                    <b>Si querés sacar entradas para dos funciones seleccioná la segunda función abajo.</b>
+                </p>
+                <p style="color: #2312b6; margin-bottom:0px;"> (Si solo querés asistir a una función no selecciones
+                    nada) </p>
 
                 <div class="row">
                     <div class="col">
                         <!--<b><label for="funcion2">Selecciona la segunda función (opcional)</label></b>-->
                         <select class="form-control" name="funcion2" wire:model="selectedFunc2">
-                            <option value="" >------------------------------</option>
+                            <option value="">------------------------------</option>
                             @foreach ( $funciones as $funcion2)
-                                @if ($funcion2->func_id != $selectedFunc1 && $funcion2->id != $temaFunc1 &&($funcion2->capacidad * (1 + $sobreventa/100)-($funcion2->cant_total) > 0))
-                                    <option value="{{ $funcion2->func_id }}">{{ $funcion2->titulo }} - {{utf8_encode(strftime("%a %d/%m", strtotime($funcion2->fecha))) }} - {{strftime("%H:%M", strtotime($funcion2->horario ))}}
-                                    </option>
-                                @endif
+                            @if ($funcion2->func_id != $selectedFunc1 && $funcion2->id != $temaFunc1 &&
+                            ($funcion2->capacidad * (1 + $sobreventa/100)-($funcion2->cant_total) > 0))
+                            <option value="{{ $funcion2->func_id }}">{{ $funcion2->titulo }} - {{
+                                utf8_encode(strftime("%A %d de %B", strtotime($funcion2->fecha))) }} - {{
+                                strftime("%H:%M", strtotime($funcion2->horario ))}}
+                            </option>
+                            @endif
                             @endforeach
                         </select>
                     </div>
@@ -93,18 +101,16 @@
                     <div class="col-md-4">
                         <b><label for="cant_adul"><i class="fa fa-ticket"></i> Cantidad de Entradas:</label></b>
                         <select class="form-control" name="cant_adul" wire:model="entr_gral">
-                            @for ($i=1; $i <= $maxEntr; $i++ ) 
-                                <option value="{{ $i }}">{{ $i }}</option>
-                            @endfor
+                            @for ($i=1; $i <= $maxEntr; $i++ ) <option value="{{ $i }}">{{ $i }}</option>
+                                @endfor
                         </select>
                         <p>Mayores de 3 años ${{ $precio }}c/u.</p>
                     </div>
                     <div class="col-md-4">
                         <b><label for="cant_men"><i class="fa fa-ticket"></i> Cantidad seguros:</label></b>
                         <select class="form-control" name="cant_men" wire:model="entr_seg">
-                            @for ($i=0; $i <= $maxEntr - $entr_gral; $i++ ) 
-                                <option value="{{ $i }}">{{ $i }}</option>
-                            @endfor
+                            @for ($i=0; $i <= $maxEntr - $entr_gral; $i++ ) <option value="{{ $i }}">{{ $i }}</option>
+                                @endfor
                         </select>
                         <p>Niños entre 1 y 2 años ó CUD ${{ $precio_seg }}c/u.</p>
                     </div>

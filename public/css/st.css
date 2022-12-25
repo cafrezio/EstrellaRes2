@@ -181,3 +181,15 @@ input[type=number] {
         line-height: 66px;
 	}
 }
+
+.tit_res {
+    background-color: #4c3ee1;
+    color: white;
+    margin-top: -1.5REM;
+    margin-right: -1.5rem;
+    margin-left: -1.5rem;
+    padding-top: 1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-bottom: 0.5rem;
+}

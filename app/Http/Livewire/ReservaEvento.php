@@ -86,10 +86,15 @@ class ReservaEvento extends Component
 
     public function updatedselectedFunc2($func2_id)
     {
-        
-        if ($func2_id == null) {
+        //dd($func2_id);
+        if ($func2_id == null || $func2_id == "") {
             $this->selectedFunc2 = null;
-            $this->precio = $this->evento->precio;
+            if ($this->entr_gral >5){
+                $this->precio = $this->evento->precio_prom;
+            }else{
+                $this->precio = $this->evento->precio;
+            }
+            
             $this->cant_funciones=1;
         }
         else{
@@ -105,6 +110,15 @@ class ReservaEvento extends Component
 
     public function updated()
     {
+        //dd($this->selectedFunc2);
+        if($this->entr_gral > 5 || $this->selectedFunc2 != null){
+            $this->precio = $this->evento->precio_prom;
+        }
+        else
+        {
+            $this->precio = $this->evento->precio;
+        }
+
         if ( ($this->entr_gral + $this->entr_seg) > $this->maxEntr) {
             $this->entr_seg = max(0 ,$this->maxEntr - $this->entr_gral);
         }
