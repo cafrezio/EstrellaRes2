@@ -34,7 +34,7 @@
                 <div class="row">
                     <div class="col">
                         <b><label for="funcion1"><i class="fa fa-bullhorn"></i> Selecciona la primer función</label></b>
-                        <select class="form-control" name="funcion1" wire:model="selectedFunc1">
+                        <select class="form-control" name="funcion1" wire:model="selectedFunc1" style="font-size: 0.9rem;">
                             @foreach ($funciones as $funcion)
                             @if ($funcion->func_id == $func_id )
                             <option value="{{ $funcion->func_id }}">{{ $funcion->titulo }} - {{ utf8_encode(strftime("%a
@@ -75,7 +75,7 @@
                 <div class="row">
                     <div class="col">
                         <!--<b><label for="funcion2">Selecciona la segunda función (opcional)</label></b>-->
-                        <select class="form-control" name="funcion2" wire:model="selectedFunc2">
+                        <select class="form-control" name="funcion2" wire:model="selectedFunc2"  style="font-size: 0.9rem;">
                             <option value="" >------------------------------</option>
                             @foreach ( $funciones as $funcion2)
                                 @if ($funcion2->func_id != $selectedFunc1 && $funcion2->id != $temaFunc1 &&($funcion2->capacidad * (1 + $sobreventa/100)-($funcion2->cant_total) > 0))
