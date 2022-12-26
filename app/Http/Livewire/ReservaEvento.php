@@ -89,7 +89,7 @@ class ReservaEvento extends Component
         //dd($func2_id);
         if ($func2_id == null || $func2_id == "") {
             $this->selectedFunc2 = null;
-            if ($this->entr_gral >5){
+            if ($this->entr_gral >4){
                 $this->precio = $this->evento->precio_prom;
             }else{
                 $this->precio = $this->evento->precio;
@@ -111,7 +111,7 @@ class ReservaEvento extends Component
     public function updated()
     {
         //dd($this->selectedFunc2);
-        if($this->entr_gral > 5 || $this->selectedFunc2 != null){
+        if($this->entr_gral > 4 || $this->selectedFunc2 != null){
             $this->precio = $this->evento->precio_prom;
         }
         else

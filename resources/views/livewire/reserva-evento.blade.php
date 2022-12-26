@@ -63,7 +63,7 @@
                 padding: 10px 20px;
                 text-align: center;
                 border-radius: 10px;
-                margin-top: 10px;">Si sacás entradas para dos funciones o más de 5 entradas (mayores) <b>tenés
+                margin-top: 10px;">Si sacás entradas para dos funciones o a partir de 5 entradas (mayores) <b>tenés
                         descuento!</b>
                     Pagás el <b>precio promocional de ${{ $evento->precio_prom }} </b>cada entrada!</p>
                 @endif
