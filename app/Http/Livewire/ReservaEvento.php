@@ -142,7 +142,7 @@ class ReservaEvento extends Component
         {
             $mensaje = "<b>Ya existe una reserva registrada con el numero $this->tel</b>. 
                         <br>Ante cualquier duda o modificacion de tu reserva comunicate con 
-                        nosotros por <a href='https://api.whatsapp.com/send?phone=+5491141462850' target='_blank'>Whatsapp</a>";
+                        nosotros por <a href='https://api.whatsapp.com/send?phone=+5491151144695' target='_blank'>Whatsapp</a>";
                         
 
             $this->emit('alert', $mensaje, 'Uups...', 'error');
