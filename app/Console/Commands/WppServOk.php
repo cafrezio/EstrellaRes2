@@ -46,9 +46,9 @@ class WppServOk extends Command
         $stringDate = date('d-m-y H:i');
         $hora = 0;
         $hora = date('H', strtotime($stringDate));
-        $evtAct = Evento::all()->where('activo','=','1');
+        $evtAct = Evento::all()->where('activo','=','1')->count();
 
-        if ($evtAct && $hora <= 8) {
+        if (!$evtAct || $hora <= 8) {
             return;
         }
 

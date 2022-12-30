@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 class WebHookController extends Controller
 {
-    public function handle(Request $request)
+  public function handle(Request $request)
   { 
     
     if (!isset($request->data['body'])){
@@ -29,7 +29,7 @@ class WebHookController extends Controller
     if(in_array($mens_proc, $mensCancel))
     {
       
-      	echo $cel_proc . '\n';
+      echo $cel_proc . '\n';
       
         $reserv = DB::table('reservas')
         ->join('funcione_reserva', 'funcione_reserva.reserva_id', '=', 'reservas.id')
@@ -51,8 +51,29 @@ class WebHookController extends Controller
         else{
           $mens = "No hay reservas registradas con este numero de telefono";
         }
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, [
+            CURLOPT_URL => "https://api.wassenger.com/v1/messages",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_POSTFIELDS => "{\"phone\":\"". $cel. "\",\"message\":\"" . $mens . "\"}",
+            CURLOPT_HTTPHEADER => [
+                "Content-Type: application/json",
+                "Token: 066f35090cd6e1403c8c62cb8fdfbb2cec1afa37f8522d85200245997ad75130f889c44eeb732f4a"
+        ],
+        ]);
+    
+        $response = curl_exec($curl);
  
     }
+
+    /*
     else
     {
       $mens = "*MENSAJE AUTOMATICO*\\n";
@@ -64,25 +85,6 @@ class WebHookController extends Controller
       $mens.= "➖➖➖➖➖➖➖\\n";
       $mens.= "Gracias";
     }
-
-    $curl = curl_init();
-
-    curl_setopt_array($curl, [
-        CURLOPT_URL => "https://api.wassenger.com/v1/messages",
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => "",
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 30,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => "POST",
-        CURLOPT_POSTFIELDS => "{\"phone\":\"". $cel. "\",\"message\":\"" . $mens . "\"}",
-        CURLOPT_HTTPHEADER => [
-            "Content-Type: application/json",
-            "Token: 066f35090cd6e1403c8c62cb8fdfbb2cec1afa37f8522d85200245997ad75130f889c44eeb732f4a"
-    ],
-    ]);
-
-    $response = curl_exec($curl);
-
+    */
   }
 }

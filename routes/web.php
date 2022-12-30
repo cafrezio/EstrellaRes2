@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\GeneraleController;
 use App\Http\Controllers\Admin\IndexController;
 use App\Http\Controllers\Admin\RendicionController;
 use App\Http\Controllers\WebHookController;
+use App\Http\Controllers\WebHookEncuestaController;
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/admin', [IndexController::class, 'index'])->name('admin');
 
@@ -43,6 +44,8 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/admin/rendicionprint/{id_
 //Route::get('users/report', 'UsersController@report');
 
 Route::post('/webhook', [WebHookController::class, 'handle']);
+
+Route::post('/webhookenc', [WebHookEncuestaController::class, 'handle']);
 
 Route::get('/', ShowEventos::class)->name('home');
 

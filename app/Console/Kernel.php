@@ -26,6 +26,9 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('wpprecord:task')->timezone('America/Argentina/Buenos_Aires')->twiceDaily(10, 11);
         $schedule->command('wppservok:task')->timezone('America/Argentina/Buenos_Aires')->everyThirtyMinutes();
+        
+        $schedule->command('cargatablaausentes:task')->timezone('America/Argentina/Buenos_Aires')->dailyAt('07:00');
+        $schedule->command('wppencausentes:task')->timezone('America/Argentina/Buenos_Aires')->dailyAt('17:00');
     }
 
     /**
