@@ -81,7 +81,7 @@ class SaveResSheet
         }
         
         
-        $mens .="La reserva de entradas es un *compromiso de asistencia al evento*. ⚠ Si no vas a asistir escribí la pablara *CANCELAR* así damos de baja tu reserva.\\n\\n";
+        $mens .="La reserva de entradas es un *compromiso de asistencia al evento*. ⚠ Si no vas a asistir escribí la palabra *CANCELAR* así damos de baja tu reserva.\\n\\n";
 
         ReservaWpp::dispatch($this->reserva->id, $cel, $mens);
 
