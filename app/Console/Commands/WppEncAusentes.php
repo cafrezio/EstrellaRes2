@@ -41,6 +41,7 @@ class WppEncAusentes extends Command
         $ausentes = DB::table('reservas_ausentes')
         ->select('telefono', 'id')
         ->whereNull('estado')
+        ->take(500)
         ->get();
 
         foreach($ausentes as $ausente)
@@ -57,7 +58,7 @@ class WppEncAusentes extends Command
     {
         $postFields = '{
             "phone": "' . $cel . '",
-            "device": "629b304cce503508260c325e",
+            "device": "' . env('WPP_DEVICE_ENC') . '",
             "order": true,
             "list": {
                 "description": "Siempre queremos mejorar nuestro servicio, por lo que te pedimos si no te molesta, nos cuentes por qué no viniste",

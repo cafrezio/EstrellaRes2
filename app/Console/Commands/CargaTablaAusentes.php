@@ -47,7 +47,7 @@ class CargaTablaAusentes extends Command
                 INNER JOIN funciones as fun ON fun.id = funres.funcione_id
                 INNER JOIN temas as tem ON fun.tema_id = tem.id
                 INNER JOIN eventos as evt ON fun.evento_id = evt.id
-                WHERE evt.activo = 0 && asist=0 && res.id > (SELECT COALESCE(MAX(id),0) from reservas_ausentes)
+                WHERE evt.activo = 0 && asist=0 && evt.id > (SELECT MAX(evt_id) from reservas_ausentes)
                 ORDER BY res.id  DESC) as res_uniq
                 
                 INNER JOIN (SELECT reserva_id, min(funres.funcione_id) as f1, MAX(funres.funcione_id) as f2 FROM

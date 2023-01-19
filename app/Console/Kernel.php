@@ -29,6 +29,7 @@ class Kernel extends ConsoleKernel
         
         $schedule->command('cargatablaausentes:task')->timezone('America/Argentina/Buenos_Aires')->dailyAt('07:00');
         $schedule->command('wppencausentes:task')->timezone('America/Argentina/Buenos_Aires')->dailyAt('17:00');
+        $schedule->command('wppencausentes:task')->timezone('America/Argentina/Buenos_Aires')->dailyAt('18:00');
     }
 
     /**
