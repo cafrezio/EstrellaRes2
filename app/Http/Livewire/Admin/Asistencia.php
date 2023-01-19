@@ -169,13 +169,18 @@ class Asistencia extends Component
         $cantFunc = $res->funciones()->count();
         //$importe = ($res->cant_esp * $this->importeMen + $cant_adul * $this->importeGral) * $cantFunc;
 
-
         if($cantFunc > 1){
             $importe = ($res->cant_esp * $this->importeMen + $cant_adul * $this->importeComb) * 2;
         }
         else
         {
-            $importe = $res->cant_esp * $this->importeMen + $cant_adul * $this->importeGral;
+            if($cant_adul > 4){
+                $importe = $res->cant_esp * $this->importeMen + $cant_adul * $this->importeComb;
+            }else
+            {
+                $importe = $res->cant_esp * $this->importeMen + $cant_adul * $this->importeGral;
+            }
+            
         }
         $res->cant_adul = $cant_adul;
         $res->importe = $importe;
@@ -185,13 +190,18 @@ class Asistencia extends Component
     public function changeCantEsp(Reserva $res, $cant_esp){
         $cantFunc = $res->funciones()->count();
         //$importe = ($cant_esp * $this->importeMen + $res->cant_adul * $this->importeGral) * $cantFunc;
-
         if($cantFunc > 1){
             $importe = ($cant_esp * $this->importeMen + $res->cant_adul * $this->importeComb) * 2;
         }
         else
         {
-            $importe = $cant_esp * $this->importeMen + $res->cant_adul * $this->importeGral;
+            if($res->cant_adul > 4){
+                $importe = $cant_esp * $this->importeMen + $res->cant_adul * $this->importeComb;
+            }else
+            {
+                $importe = $cant_esp * $this->importeMen + $res->cant_adul * $this->importeGral;
+            }
+            
         }
 
         $res->cant_esp = $cant_esp;
@@ -208,13 +218,22 @@ class Asistencia extends Component
 
         $res->funciones()->sync($func_att);
         $cantFunc = $res->funciones()->count();
+
         if($cantFunc > 1){
             $importe = ($res->cant_esp * $this->importeMen + $res->cant_adul * $this->importeComb) * 2;
         }
         else
         {
-            $importe = $res->cant_esp * $this->importeMen + $res->cant_adul * $this->importeGral;
+            if($res->cant_adul > 4){
+                $importe = $res->cant_esp * $this->importeMen + $res->cant_adul * $this->importeComb;
+            }else
+            {
+                $importe = $res->cant_esp * $this->importeMen + $res->cant_adul * $this->importeGral;
+            }
+            
         }
+
+
         $res->importe = $importe;
         $res->save();
     }
@@ -252,7 +271,12 @@ class Asistencia extends Component
         }
         else
         {
-            $this->newImporte = ($this->newCantEsp * $this->importeMen + $this->newCantAdul * $this->importeGral);
+            if($this->newCantAdul > 4){
+                $this->newImporte= $this->newCantEsp * $this->importeMen + $this->newCantAdul * $this->importeComb;
+            }else
+            {
+                $this->newImporte = $this->newCantEsp * $this->importeMen + $this->newCantAdul * $this->importeGral;
+            }
         }
         
     }
