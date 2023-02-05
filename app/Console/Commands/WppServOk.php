@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Models\Evento;
+use Illuminate\Support\Facades\DB;
 
 class WppServOk extends Command
 {
@@ -72,7 +73,28 @@ class WppServOk extends Command
         curl_close($curl);
 
 
-        $mens = $stringDate . ' - Wassenger-Ok ✔ \\n En Cola: ' . $responseQ->queue->size;
+        $mens = $stringDate . ' - Wassenger-Ok ✔ - En Cola: ' . $responseQ->queue->size;
+
+        $ocupacion = DB::select('SELECT ocup.id, ocup.lugar, date_format(ocup.fecha, "%d-%m") as fecha, ocup.CantRes, tot.Total, CONCAT(FORMAT(ocup.CantRes/tot.Total * 100, 0), "%")as Porc
+        FROM (Select eventos.id, eventos.lugar, funciones.fecha, SUM(reservas.cant_adul + reservas.cant_esp) as CantRes from reservas 
+        JOIN funcione_reserva ON reservas.id = funcione_reserva.reserva_id
+        JOIN funciones ON funcione_reserva.funcione_id = funciones.id
+        JOIN eventos on funciones.evento_id = eventos.id
+        Where eventos.activo=1
+        GROUP BY eventos.id, eventos.lugar, funciones.fecha
+        ORDER BY funciones.fecha, eventos.id) ocup
+        JOIN
+        (Select eventos.id, funciones.fecha, SUM(funciones.capacidad) as Total from eventos
+        JOIN funciones on eventos.id = funciones.evento_id
+        Where eventos.activo=1
+        GROUP BY eventos.id, funciones.fecha
+        ORDER BY funciones.fecha, eventos.id) tot
+        ON ocup.id = tot.id;');
+
+        foreach ($ocupacion as $ocupEvt){
+            $mens.= "\\n *$ocupEvt->lugar - $ocupEvt->Porc* \\n $ocupEvt->fecha - *$ocupEvt->CantRes* de $ocupEvt->Total \\n➖➖➖➖➖➖➖";
+        }
+
 
         $curl = curl_init();
 
@@ -97,5 +119,6 @@ class WppServOk extends Command
         curl_close($curl);
 
         echo($mens);
+        echo ($response);
     }
 }
