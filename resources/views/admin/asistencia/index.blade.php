@@ -28,6 +28,9 @@
             padding-bottom: 0px !important;
         }
     </style>
+
+    <link rel="stylesheet" href="/css/admin.css">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
 @stop
 
 
