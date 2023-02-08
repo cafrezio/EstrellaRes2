@@ -89,7 +89,7 @@ class WppServOk extends Command
         Where eventos.activo=1
         GROUP BY eventos.id, funciones.fecha
         ORDER BY funciones.fecha, eventos.id) tot
-        ON ocup.id = tot.id;');
+        ON ocup.id = tot.id AND ocup.fecha = tot.fecha;');
 
         foreach ($ocupacion as $ocupEvt){
             $mens.= "\\n *$ocupEvt->lugar - $ocupEvt->Porc* \\n $ocupEvt->fecha - *$ocupEvt->CantRes* de $ocupEvt->Total \\n➖➖➖➖➖➖➖";
