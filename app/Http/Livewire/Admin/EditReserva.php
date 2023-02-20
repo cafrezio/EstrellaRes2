@@ -36,6 +36,7 @@ class EditReserva extends Component
     public $entrseg;
     public $cant_funciones=0;
     public $importe;
+    public $sobreventa;
 
     public $test;
 
@@ -105,7 +106,11 @@ class EditReserva extends Component
             $this->reserv_func1 = $func1->cant_total;
             $this->disp_func1 = $func1->capacidad * (1 + $this->sobreventa/100)-($func1->cant_total);
 
-            $this->precio = Evento::find($this->eventoSel)->precio;
+            if ($this->entrgral > 4)
+                $this->precio = Evento::find($this->eventoSel)->precio_prom;
+            else
+                $this->precio = Evento::find($this->eventoSel)->precio;
+
             $this->cant_funciones=1;
         }
         else
@@ -148,7 +153,11 @@ class EditReserva extends Component
             $this->reserv_func2 = null;
             $this->disp_func2 = null;
 
-            $this->precio = Evento::find($this->eventoSel)->precio;
+            if ($this->entrgral > 4)
+                $this->precio = Evento::find($this->eventoSel)->precio_prom;
+            else
+                $this->precio = Evento::find($this->eventoSel)->precio;
+
             $this->cant_funciones=1;
         }  
 
@@ -170,9 +179,16 @@ class EditReserva extends Component
         $this->reserv_func2 = null;
         $this->disp_func2 = null;
         $this->importe = null;
+
+        $this->sobreventa = Evento::find($this->eventoSel)->sobreventa;
     }
 
     public function updatedentrgral(){
+        if ($this->entrgral > 4 || $this->cant_funciones == 2)
+            $this->precio = Evento::find($this->eventoSel)->precio_prom;
+        else
+            $this->precio = Evento::find($this->eventoSel)->precio;
+
         $this->importe = null;
     }
 

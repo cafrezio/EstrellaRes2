@@ -26,11 +26,8 @@ class ReservaChart extends Component
         ->orderBy('fecha')
         ->get();
 
+        $this->datosTot();
         return view('livewire.admin.reserva-chart', compact('eventos','fechas'));
-    }
-
-    public function mount(){
-
     }
 
     public function updatedfechaSel(){
@@ -96,6 +93,38 @@ class ReservaChart extends Component
         
         $titulo = Evento::find($this->eventoSel)->lugar . " - " . utf8_encode(strftime("%A %d de %B", strtotime($this->fechaSel)));
         $this->emit('graph', $titulo, $categorias, $dataRes, $dataLib);
+    }
+
+
+    public function datosTot(){
+        setlocale(LC_TIME, "spanish");
+        $dat = DB::select("SELECT res.evento_id, tot.lugar, tot.fecha, tot.entradas, res.cap FROM
+        (SELECT funciones.evento_id, SUM(funciones.capacidad) as cap FROM funciones
+        GROUP By funciones.evento_id ) res
+        
+        JOIN 
+        (SELECT sub.id as evento_id, sub.lugar, sub.fecha,SUM(sub.cant_adul + sub.cant_esp) as entradas FROM
+             (SELECT reservas.id as res_id, eventos.id, eventos.lugar, funciones.fecha, reservas.cant_adul, reservas.cant_esp FROM eventos
+                     LEFT JOIN funciones on  eventos.id = funciones.evento_id
+                     LEFT JOIN funcione_reserva on funcione_reserva.funcione_id = funciones.id
+                    LEFT JOIN reservas on reservas.id = funcione_reserva.reserva_id 
+                    WHERE eventos.activo=1) sub
+        GROUP BY sub.id, sub.fecha ) tot
+        ON res.evento_id = tot.evento_id  
+        ORDER BY `tot`.`fecha`;");
+
+        $categorias = array();
+        $dataRes = array();
+        $dataLib = array();
+        foreach($dat as $evento){
+            array_push($categorias, $evento->lugar . " - " . utf8_encode(strftime("%d/%m", strtotime($evento->fecha))));
+            array_push($dataRes, $evento->entradas);
+            array_push($dataLib, $evento->cap - $evento->entradas);
+        }
+
+        
+        $titulo = "Totales";
+        $this->emit('graph2', $titulo, $categorias, $dataRes, $dataLib);
     }
 
 }
