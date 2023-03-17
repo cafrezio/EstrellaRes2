@@ -193,13 +193,16 @@
             <tr>
                 <td></td>
                 <td>
-                    <input type="text" class="form-control" wire:model="newUsuario">
+                    <input type="text" class="form-control" wire:model.defer="newUsuario">
                     @error('newUsuario')
                     <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </td>
                 <td>
-                    <input type="text" class="form-control" wire:model="newTelefono">
+                    <input type="text" class="form-control" wire:model.defer="newTelefono">
+                    @error('newTelefono')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
                 </td>
                 <td>
                     <select class="form-control" name="cant_adul" wire:change="changeNewCantAdul($event.target.value)">

@@ -5,14 +5,14 @@
 @section('content')
 <h1 style="padding:7px"><i class="fas fa-chart-bar"></i> </i>&nbsp;&nbsp;Ocupación</h1>
 <div class="row">
-	<div class="col-8">
+	<div class="col-lg-8" style="margin-bottom: 20px">
 		<div class="card">
 			@livewire('admin.reserva-chart')
 		</div>
 		<div id="container-graph" style="height: 70vh"></div>
 	</div>
 
-	<div class="col-4">
+	<div class="col-lg-4">
 		<div id="container-graph2" style="height: 80vh"></div>
 	</div>
 </div>

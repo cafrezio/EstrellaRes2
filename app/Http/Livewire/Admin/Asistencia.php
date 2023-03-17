@@ -43,7 +43,8 @@ class Asistencia extends Component
     public $fechaf1;
 
     protected $rules = [
-        'newUsuario' => 'required|min:3'
+        'newUsuario' => 'required|min:3',
+        'newTelefono' => 'required|digits:10'
     ];
 
     public function render()
@@ -284,10 +285,11 @@ class Asistencia extends Component
     public function save(bool $free = null){
         $this->validate();
 
+        /*
         if($this->newTelefono == null)
         {
             $this->newTelefono = '1111';
-        }
+        }*/
         
         $newRes = new Reserva();
         $newRes->usuario = $this->newUsuario;
